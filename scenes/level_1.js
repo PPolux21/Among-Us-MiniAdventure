@@ -186,7 +186,7 @@ export default class Level_1 extends Phaser.Scene{
             if (Math.floor(Math.random() * 2)) {
                 var bomb = this.bombs.create(x, 16, 'imposter-der');   
             }else{
-                var bomb = this.bombs.create(x, 16, 'imposter-izq');   
+                var bomb = this.bombs.create(x, 16, 'imposter-izq'); 
             }
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
