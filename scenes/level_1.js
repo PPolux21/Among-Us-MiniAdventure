@@ -30,9 +30,11 @@ export default class Level_1 extends Phaser.Scene{
     {
         //  A simple background for our game
         this.add.image(400, 300, 'sky');
+        this.add.image(1198, 300, 'sky');
+        this.add.image(1996, 300, 'sky');
 
-        this.physics.world.setBounds(0, 0, 2000, 600);
-        this.cameras.main.setBounds(0, 0, 2000, 600);
+        this.physics.world.setBounds(0, 0, 2250, 600);
+        this.cameras.main.setBounds(0, 0, 2250, 600);
 
         //  The platforms group contains the ground and the 2 ledges we can jump on
         this.platforms = this.physics.add.staticGroup();
@@ -40,11 +42,20 @@ export default class Level_1 extends Phaser.Scene{
         //  Here we create the ground.
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1198, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1996, 568, 'ground').setScale(2).refreshBody();
 
         //  Now let's create some ledges
         this.platforms.create(600, 400, 'ground');
+        this.platforms.create(840, 400, 'ground');
+        this.platforms.create(1500, 400, 'ground');
+
         this.platforms.create(50, 250, 'ground');
+        this.platforms.create(1850, 250, 'ground');
+
+
         this.platforms.create(750, 220, 'ground');
+        this.platforms.create(1250, 220, 'ground');
 
         // The player and its settings
         this.player = this.physics.add.sprite(100, 450, 'player1'); //liego hacer cambio de personaje
@@ -82,8 +93,8 @@ export default class Level_1 extends Phaser.Scene{
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
             key: 'robot',
-            repeat: 11,
-            setXY: { x: 12, y: 0, stepX: 70 }
+            repeat: 23,
+            setXY: { x: 12, y: 0, stepX: (50 + Math.floor(Math.random() + 40)) }
         });
 
         this.stars.children.iterate((child) => {
@@ -96,7 +107,10 @@ export default class Level_1 extends Phaser.Scene{
         this.bombs = this.physics.add.group();
 
         //  The score
-        this.scoreText = this.add.text(700, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '32px', fill: '#000' });
+        this.scoreText = this.add.text(700, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+        this.scoreText.setFontFamily('InYourFaceJoffrey');
+        this.scoreText.setScrollFactor(0);
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms);
@@ -172,16 +186,17 @@ export default class Level_1 extends Phaser.Scene{
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
 
-        if (this.stars.countActive(true) === 0)
+        if (this.stars.countActive(true)%6 == 0)
         {
             //  A new batch of stars to collect
+            /*
             this.stars.children.iterate((child) => {
 
                 child.enableBody(true, child.x, 0, true, true);
 
-            });
+            });*/
 
-            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x = (player.x < 1600) ? player.x + Phaser.Math.Between(150, 300) : player.x - Phaser.Math.Between(150, 300);
             
             if (Math.floor(Math.random() * 2)) {
                 var bomb = this.bombs.create(x, 16, 'imposter-der');   
