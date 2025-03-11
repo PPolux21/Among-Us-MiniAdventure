@@ -16,26 +16,29 @@ export default class Level_1 extends Phaser.Scene{
     gameOver = false;
     scoreText;
     followCamera = false;
+    isPaused = false;
 
     preload ()
     {
-        this.load.image('sky', '../assets/images/sky.png');
-        this.load.image('heart', '../assets/images/vida.png');
-        this.load.image('ground', '../assets/images/platform.png');
-        this.load.image('robot', '../assets/images/robot.png');
-        this.load.image('imposter-der', '../assets/images/impostor-derecha.png');
-        this.load.image('imposter-izq', '../assets/images/impostor-izquierda.png');
-        this.load.spritesheet('player1', '../assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
-        this.load.spritesheet('player2', '../assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.image('sky', './assets/images/sky.png');
+        this.load.image('heart', './assets/images/vida.png');
+        this.load.image('ground', './assets/images/platform.png');
+        this.load.image('robot', './assets/images/robot.png');
+        this.load.image('imposter-der', './assets/images/impostor-derecha.png');
+        this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
+        this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
     }
 
     create ()
     {
         //  A simple background for our game
         this.add.image(400, 300, 'sky');
+        this.add.image(1198, 300, 'sky');
+        this.add.image(1996, 300, 'sky');
 
-        this.physics.world.setBounds(0, 0, 2000, 600);
-        this.cameras.main.setBounds(0, 0, 2000, 600);
+        this.physics.world.setBounds(0, 0, 2250, 600);
+        this.cameras.main.setBounds(0, 0, 2250, 600);
 
         //  The platforms group contains the ground and the 2 ledges we can jump on
         this.platforms = this.physics.add.staticGroup();
@@ -43,11 +46,20 @@ export default class Level_1 extends Phaser.Scene{
         //  Here we create the ground.
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1198, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1996, 568, 'ground').setScale(2).refreshBody();
 
         //  Now let's create some ledges
         this.platforms.create(600, 400, 'ground');
+        this.platforms.create(840, 400, 'ground');
+        this.platforms.create(1500, 400, 'ground');
+
         this.platforms.create(50, 250, 'ground');
+        this.platforms.create(1850, 250, 'ground');
+
+
         this.platforms.create(750, 220, 'ground');
+        this.platforms.create(1250, 220, 'ground');
 
         // The player and its settings
         this.player = this.physics.add.sprite(100, 450, 'player1'); //liego hacer cambio de personaje
@@ -85,8 +97,8 @@ export default class Level_1 extends Phaser.Scene{
         //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
         this.stars = this.physics.add.group({
             key: 'robot',
-            repeat: 11,
-            setXY: { x: 12, y: 0, stepX: 70 }
+            repeat: 23,
+            setXY: { x: 12, y: 0, stepX: (50 + Phaser.Math.Between(0,40)) }
         });
 
         this.stars.children.iterate((child) => {
@@ -169,10 +181,12 @@ export default class Level_1 extends Phaser.Scene{
 
         if (Phaser.Input.Keyboard.JustDown(this.cursors.esc))
         {
-            if (scene.isPaused()) {
-                scene.resume();
+            if (this.isPaused) {
+                this.scene.resume();
+                this.isPaused = false;
             } else {
-                scene.pause();
+                this.scene.pause();
+                this.isPaused = false;
             }
         }
     }
@@ -185,16 +199,17 @@ export default class Level_1 extends Phaser.Scene{
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
 
-        if (this.stars.countActive(true) === 0)
+        if (this.stars.countActive(true)%6 === 0)
         {
+            /*
             //  A new batch of stars to collect
             this.stars.children.iterate((child) => {
 
                 child.enableBody(true, child.x, 0, true, true);
 
-            });
+            });*/
 
-            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x = (player.x < 1600) ? player.x + Phaser.Math.Between(150, 300) : player.x - Phaser.Math.Between(150, 300);
             
             if (Math.floor(Math.random() * 2)) {
                 var bomb = this.bombs.create(x, 16, 'imposter-der');   
