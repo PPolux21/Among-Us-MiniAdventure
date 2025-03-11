@@ -183,7 +183,11 @@ export default class Level_1 extends Phaser.Scene{
 
             var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
             
-            var bomb = this.bombs.create(x, 16, 'imposter-der');
+            if (Math.floor(Math.random() * 2)) {
+                var bomb = this.bombs.create(x, 16, 'imposter-der');   
+            }else{
+                var bomb = this.bombs.create(x, 16, 'imposter-izq');   
+            }
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
