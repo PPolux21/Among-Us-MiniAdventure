@@ -11,6 +11,8 @@ export default class Level_1 extends Phaser.Scene{
     platforms;
     cursors;
     score = 0;
+    life = 3;
+    lifes;
     gameOver = false;
     scoreText;
     followCamera = false;
@@ -18,6 +20,7 @@ export default class Level_1 extends Phaser.Scene{
     preload ()
     {
         this.load.image('sky', '../assets/images/sky.png');
+        this.load.image('heart', '../assets/images/vida.png');
         this.load.image('ground', '../assets/images/platform.png');
         this.load.image('robot', '../assets/images/robot.png');
         this.load.image('imposter-der', '../assets/images/impostor-derecha.png');
@@ -96,7 +99,17 @@ export default class Level_1 extends Phaser.Scene{
         this.bombs = this.physics.add.group();
 
         //  The score
-        this.scoreText = this.add.text(700, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '32px', fill: '#000' });
+        this.scoreText = this.add.text(670, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
+        this.scoreText.setScrollFactor(0);
+
+        //vidas
+        this.lifes = this.physics.add.staticGroup();
+        this.lifes.create(140, 40, 'heart').setScale(1.5).refreshBody();
+        this.lifes.create(90, 40, 'heart').setScale(1.5).refreshBody();
+        this.lifes.create(40, 40, 'heart').setScale(1.5).refreshBody();
+        this.lifes.children.iterate((life) => {
+            life.setScrollFactor(0);
+        });
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms);
@@ -198,12 +211,19 @@ export default class Level_1 extends Phaser.Scene{
 
     hitBomb (player, bomb)
     {
-        this.physics.pause();
+        this.life--;
+        let lifesElement = this.lifes.getFirstAlive();
+        lifesElement.destroy();
 
-        player.setTint(0xff0000);
+        if(this.life <= 0){
+            this.gameOver = true;
 
-        player.anims.play('turn');
+            this.physics.pause();
 
-        this.gameOver = true;
+            player.setTint(0xff0000);
+
+            player.anims.play('turn'); 
+        }
+
     }
 }
