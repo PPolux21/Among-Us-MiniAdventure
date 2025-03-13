@@ -11,8 +11,8 @@ export default class Level_1 extends Phaser.Scene{
     platforms;
     cursors;
     score = 0;
-    life = 3;
-    lifes;
+    live = 3;
+    lives = [];
     gameOver = false;
     scoreText;
     followCamera = false;
@@ -20,9 +20,9 @@ export default class Level_1 extends Phaser.Scene{
 
     preload ()
     {
-        this.load.image('sky', './assets/images/sky.png');
+        this.load.image('sky', './assets/images/cafeteria_cleanup.png');
         this.load.image('heart', './assets/images/vida.png');
-        this.load.image('ground', './assets/images/platform.png');
+        this.load.image('ground', './assets/images/plataforma.png');
         this.load.image('robot', './assets/images/robot.png');
         this.load.image('imposter-der', './assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
@@ -33,9 +33,7 @@ export default class Level_1 extends Phaser.Scene{
     create ()
     {
         //  A simple background for our game
-        this.add.image(400, 300, 'sky');
-        this.add.image(1198, 300, 'sky');
-        this.add.image(1996, 300, 'sky');
+        this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);
 
         this.physics.world.setBounds(0, 0, 2250, 600);
         this.cameras.main.setBounds(0, 0, 2250, 600);
@@ -115,13 +113,18 @@ export default class Level_1 extends Phaser.Scene{
         this.scoreText.setScrollFactor(0);
 
         //vidas
-        this.lifes = this.physics.add.staticGroup();
-        this.lifes.create(140, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.create(90, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.create(40, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.children.iterate((life) => {
-            life.setScrollFactor(0);
-        });
+        // this.lives = this.physics.add.staticGroup();
+        // this.lives.create(140, 40, 'heart').setScale(1.5).refreshBody();
+        // this.lives.create(90, 40, 'heart').setScale(1.5).refreshBody();
+        // this.lives.create(40, 40, 'heart').setScale(1.5).refreshBody();
+        for (let i=0; i<3; i++){
+            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
+            this.lives[i].setScrollFactor(0);
+        };
+
+        //cooldown de vidas
+        this.cooldownActive = false;
+        this.cooldownTime = 2000;
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms);
@@ -226,11 +229,13 @@ export default class Level_1 extends Phaser.Scene{
 
     hitBomb (player, bomb)
     {
-        this.life--;
-        let lifesElement = this.lifes.getFirstAlive();
-        lifesElement.destroy();
+        this.live--;
 
-        if(this.life <= 0){
+        
+
+        this.lives[this.live].destroy();
+
+        if(this.live <= 0){
             this.gameOver = true;
 
             this.physics.pause();
