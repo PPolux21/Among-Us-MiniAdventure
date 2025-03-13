@@ -24,6 +24,7 @@ export default class Level_1 extends Phaser.Scene{
         this.load.image('heart', './assets/images/vida.png');
         this.load.image('ground', './assets/images/platform.png');
         this.load.image('robot', './assets/images/robot.png');
+        this.load.image('pause', './assets/images/pause.png');
         this.load.image('imposter-der', './assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
@@ -135,6 +136,25 @@ export default class Level_1 extends Phaser.Scene{
 
         this.camera = this.cameras.cameras[0];
 
+        this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
+
+        this.pause.on('pointerdown', () => {
+            if (!this.isPaused) {
+                this.scene.launch("Pause");
+                this.scene.pause();
+                this.isPaused = false;
+            }
+        });
+
+        this.pause.setInteractive();
+
+        this.pause.on('pointerover', () => {
+            this.pause.setTint(0xc0c0c0); // Cambia el color de la imagen al pasar el mouse
+        });
+
+        this.pause.on('pointerout', () => {
+            this.pause.clearTint(); // Restaura el color original al salir
+        });
     }
 
     update ()
@@ -177,17 +197,6 @@ export default class Level_1 extends Phaser.Scene{
         if (this.cursors.up.isDown && this.player.body.touching.down)
         {
             this.player.setVelocityY(-420);
-        }
-
-        if (Phaser.Input.Keyboard.JustDown(this.cursors.esc))
-        {
-            if (this.isPaused) {
-                this.scene.resume();
-                this.isPaused = false;
-            } else {
-                this.scene.pause();
-                this.isPaused = false;
-            }
         }
     }
 
