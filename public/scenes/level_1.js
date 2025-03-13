@@ -44,12 +44,12 @@ export default class Level_1 extends Phaser.Scene{
         //  Here we create the ground.
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-        this.platforms.create(1198, 568, 'ground').setScale(2).refreshBody();
-        this.platforms.create(1996, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1200, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(2000, 568, 'ground').setScale(2).refreshBody();
 
         //  Now let's create some ledges
         this.platforms.create(600, 400, 'ground');
-        this.platforms.create(840, 400, 'ground');
+        this.platforms.create(800, 400, 'ground');
         this.platforms.create(1500, 400, 'ground');
 
         this.platforms.create(50, 250, 'ground');
@@ -120,6 +120,7 @@ export default class Level_1 extends Phaser.Scene{
         for (let i=0; i<3; i++){
             this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
             this.lives[i].setScrollFactor(0);
+            this.lives[i].setDepth(1);
         };
 
         //cooldown de vidas
@@ -192,6 +193,14 @@ export default class Level_1 extends Phaser.Scene{
                 this.isPaused = false;
             }
         }
+
+        this.bombs.children.iterate((bomb) => {
+            if(bomb.body.velocity.x < 0){
+                bomb.setTexture('imposter-izq');
+            }else{
+                bomb.setTexture('imposter-der');
+            }
+        });
     }
 
     collectStar (player, star)
@@ -222,20 +231,28 @@ export default class Level_1 extends Phaser.Scene{
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            if(bomb.body.velocity.x < 0){
+                bomb.setTexture('imposter-izq');
+            }else{
+                bomb.setTexture('imposter-der');
+            }
             bomb.allowGravity = false;
-
         }
     }
 
     hitBomb (player, bomb)
     {
-        this.live--;
-
+        if(this.cooldownActive){
+            return;
+        }
         
-
+        this.live--;
         this.lives[this.live].destroy();
 
+        player.setTint(0xfb7474);
+        
         if(this.live <= 0){
+
             this.gameOver = true;
 
             this.physics.pause();
@@ -243,6 +260,31 @@ export default class Level_1 extends Phaser.Scene{
             player.setTint(0xff0000);
 
             player.anims.play('turn'); 
+
+        }else{
+
+            let tintChange = false;
+
+            let tintEvent = this.time.addEvent({
+                delay: 250,
+                callback: () => {
+                    if(tintChange){
+                        player.setTint(0xd5d5d5);
+                    }else{
+                        player.setTint(0x6c6c6c);
+                    }
+                    tintChange = !tintChange;   //permite cambiar el tinte al ser activado o desactivado
+                },
+                repeat: 5
+            });        
+
+            this.cooldownActive = true;
+            this.time.delayedCall(this.cooldownTime, () => {
+                this.cooldownActive = false;
+                player.clearTint();
+                tintEvent.remove();
+            });
+
         }
 
     }
