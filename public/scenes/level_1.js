@@ -11,8 +11,8 @@ export default class Level_1 extends Phaser.Scene{
     platforms;
     cursors;
     score = 0;
-    life = 3;
-    lifes;
+    live = 3;
+    lives = [];
     gameOver = false;
     scoreText;
     followCamera = false;
@@ -20,9 +20,9 @@ export default class Level_1 extends Phaser.Scene{
 
     preload ()
     {
-        this.load.image('sky', './assets/images/sky.png');
+        this.load.image('sky', './assets/images/cafeteria_cleanup.png');
         this.load.image('heart', './assets/images/vida.png');
-        this.load.image('ground', './assets/images/platform.png');
+        this.load.image('ground', './assets/images/plataforma.png');
         this.load.image('robot', './assets/images/robot.png');
         this.load.image('pause', './assets/images/pause.png');
         this.load.image('imposter-der', './assets/images/impostor-derecha.png');
@@ -34,9 +34,7 @@ export default class Level_1 extends Phaser.Scene{
     create ()
     {
         //  A simple background for our game
-        this.add.image(400, 300, 'sky');
-        this.add.image(1198, 300, 'sky');
-        this.add.image(1996, 300, 'sky');
+        this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);
 
         this.physics.world.setBounds(0, 0, 2250, 600);
         this.cameras.main.setBounds(0, 0, 2250, 600);
@@ -47,12 +45,12 @@ export default class Level_1 extends Phaser.Scene{
         //  Here we create the ground.
         //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-        this.platforms.create(1198, 568, 'ground').setScale(2).refreshBody();
-        this.platforms.create(1996, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(1200, 568, 'ground').setScale(2).refreshBody();
+        this.platforms.create(2000, 568, 'ground').setScale(2).refreshBody();
 
         //  Now let's create some ledges
         this.platforms.create(600, 400, 'ground');
-        this.platforms.create(840, 400, 'ground');
+        this.platforms.create(800, 400, 'ground');
         this.platforms.create(1500, 400, 'ground');
 
         this.platforms.create(50, 250, 'ground');
@@ -116,13 +114,19 @@ export default class Level_1 extends Phaser.Scene{
         this.scoreText.setScrollFactor(0);
 
         //vidas
-        this.lifes = this.physics.add.staticGroup();
-        this.lifes.create(140, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.create(90, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.create(40, 40, 'heart').setScale(1.5).refreshBody();
-        this.lifes.children.iterate((life) => {
-            life.setScrollFactor(0);
-        });
+        // this.lives = this.physics.add.staticGroup();
+        // this.lives.create(140, 40, 'heart').setScale(1.5).refreshBody();
+        // this.lives.create(90, 40, 'heart').setScale(1.5).refreshBody();
+        // this.lives.create(40, 40, 'heart').setScale(1.5).refreshBody();
+        for (let i=0; i<3; i++){
+            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
+            this.lives[i].setScrollFactor(0);
+            this.lives[i].setDepth(1);
+        };
+
+        //cooldown de vidas
+        this.cooldownActive = false;
+        this.cooldownTime = 2000;
 
         //  Collide the player and the stars with the platforms
         this.physics.add.collider(this.player, this.platforms);
@@ -198,6 +202,15 @@ export default class Level_1 extends Phaser.Scene{
         {
             this.player.setVelocityY(-420);
         }
+
+        
+        this.bombs.children.iterate((bomb) => {
+            if(bomb.body.velocity.x < 0){
+                bomb.setTexture('imposter-izq');
+            }else{
+                bomb.setTexture('imposter-der');
+            }
+        });
     }
 
     collectStar (player, star)
@@ -228,18 +241,28 @@ export default class Level_1 extends Phaser.Scene{
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            if(bomb.body.velocity.x < 0){
+                bomb.setTexture('imposter-izq');
+            }else{
+                bomb.setTexture('imposter-der');
+            }
             bomb.allowGravity = false;
-
         }
     }
 
     hitBomb (player, bomb)
     {
-        this.life--;
-        let lifesElement = this.lifes.getFirstAlive();
-        lifesElement.destroy();
+        if(this.cooldownActive){
+            return;
+        }
+        
+        this.live--;
+        this.lives[this.live].destroy();
 
-        if(this.life <= 0){
+        player.setTint(0xfb7474);
+        
+        if(this.live <= 0){
+
             this.gameOver = true;
 
             this.physics.pause();
@@ -247,6 +270,31 @@ export default class Level_1 extends Phaser.Scene{
             player.setTint(0xff0000);
 
             player.anims.play('turn'); 
+
+        }else{
+
+            let tintChange = false;
+
+            let tintEvent = this.time.addEvent({
+                delay: 250,
+                callback: () => {
+                    if(tintChange){
+                        player.setTint(0xd5d5d5);
+                    }else{
+                        player.setTint(0x6c6c6c);
+                    }
+                    tintChange = !tintChange;   //permite cambiar el tinte al ser activado o desactivado
+                },
+                repeat: 5
+            });        
+
+            this.cooldownActive = true;
+            this.time.delayedCall(this.cooldownTime, () => {
+                this.cooldownActive = false;
+                player.clearTint();
+                tintEvent.remove();
+            });
+
         }
 
     }
