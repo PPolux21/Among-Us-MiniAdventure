@@ -1,5 +1,6 @@
 import Level_1 from './scenes/level_1.js';
 import Pause from "./scenes/pause.js";
+import Bonus from "./scenes/bonus.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -12,7 +13,7 @@ const config = {
             debug: false
         }
     },
-    scene: [Level_1, Pause]
+    scene: [Level_1, Pause, Bonus]
 };
 
 const game = new Phaser.Game(config);

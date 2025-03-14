@@ -7,6 +7,7 @@ export default class Level_1 extends Phaser.Scene{
     camera;
     player;
     stars;
+    bonus;
     bombs;
     platforms;
     cursors;
@@ -16,7 +17,7 @@ export default class Level_1 extends Phaser.Scene{
     gameOver = false;
     scoreText;
     followCamera = false;
-    isPaused = false;
+    playerSprite = 'player2'; //localStorage.getItem("playerSprite");
 
     preload ()
     {
@@ -25,6 +26,7 @@ export default class Level_1 extends Phaser.Scene{
         this.load.image('ground', './assets/images/plataforma.png');
         this.load.image('robot', './assets/images/robot.png');
         this.load.image('pause', './assets/images/pause.png');
+        this.load.image('boton', './assets/images/boton.png');
         this.load.image('imposter-der', './assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
@@ -33,6 +35,7 @@ export default class Level_1 extends Phaser.Scene{
 
     create ()
     {
+        this.registry.set('bonusScore', 0);
         //  A simple background for our game
         this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);
 
@@ -61,7 +64,7 @@ export default class Level_1 extends Phaser.Scene{
         this.platforms.create(1250, 220, 'ground');
 
         // The player and its settings
-        this.player = this.physics.add.sprite(100, 450, 'player1'); //liego hacer cambio de personaje
+        this.player = this.physics.add.sprite(100, 450, this.playerSprite); //liego hacer cambio de personaje
 
         //  Player physics properties. Give the little guy a slight bounce.
         this.player.setBounce(0.2);
@@ -70,20 +73,20 @@ export default class Level_1 extends Phaser.Scene{
         //  Our player animations, turning, walking left and walking right.
         this.anims.create({
             key: 'left',
-            frames: this.anims.generateFrameNumbers('player1', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers(this.playerSprite, { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
 
         this.anims.create({
             key: 'turn',
-            frames: [ { key: 'player1', frame: 4 } ],
+            frames: [ { key: this.playerSprite, frame: 4 } ],
             frameRate: 20
         });
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('player1', { start: 5, end: 8 }),
+            frames: this.anims.generateFrameNumbers(this.playerSprite, { start: 5, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
@@ -99,6 +102,8 @@ export default class Level_1 extends Phaser.Scene{
             repeat: 23,
             setXY: { x: 12, y: 0, stepX: (50 + Phaser.Math.Between(0,40)) }
         });
+
+        this.bonus = this.physics.add.group();
 
         this.stars.children.iterate((child) => {
 
@@ -132,9 +137,11 @@ export default class Level_1 extends Phaser.Scene{
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.stars, this.platforms);
         this.physics.add.collider(this.bombs, this.platforms);
+        this.physics.add.collider(this.bonus, this.platforms);
 
         //  Checks to see if the player overlaps with any of the this.stars, if he does call the collectStar function
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+        this.physics.add.overlap(this.player, this.bonus, this.collectBonus, null, this);
 
         this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
@@ -143,10 +150,9 @@ export default class Level_1 extends Phaser.Scene{
         this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
 
         this.pause.on('pointerdown', () => {
-            if (!this.isPaused) {
+            if (!this.scene.isPaused()) {
                 this.scene.launch("Pause");
                 this.scene.pause();
-                this.isPaused = false;
             }
         });
 
@@ -159,6 +165,8 @@ export default class Level_1 extends Phaser.Scene{
         this.pause.on('pointerout', () => {
             this.pause.clearTint(); // Restaura el color original al salir
         });
+
+        this.registry.events.on('changedata', this.updateData, this);
     }
 
     update ()
@@ -248,6 +256,14 @@ export default class Level_1 extends Phaser.Scene{
             }
             bomb.allowGravity = false;
         }
+
+        if (this.score == 100) {
+            this.createBonus(230,50);
+        }
+
+        if (this.score == 200) {
+            this.createBonus(1850,50);
+        }
     }
 
     hitBomb (player, bomb)
@@ -297,5 +313,75 @@ export default class Level_1 extends Phaser.Scene{
 
         }
 
+    }
+
+    collectBonus(player, boton){
+        boton.disableBody(true, true);
+
+        this.score += 50;
+        this.scoreText.setText('Score: ' + this.score);
+
+        this.scene.launch('Bonus');
+        this.scene.pause();
+    }
+
+    updateData(parent, key, data){
+        if(key === 'bonusScore'){
+            this.score += data;
+            this.scoreText.setText('Score: ' + this.score);
+            this.registry.set('bonusScore', 0);
+        }
+    }
+
+    createBonus(x,y){
+        var botonBonus = this.bonus.create(x,y, 'boton');
+        botonBonus.setBounce(0.5);
+
+        var rect = this.add.rectangle(400, 570, 220, 50, 0X000 );
+        rect.setAlpha(0.75);
+        rect.setScrollFactor(0);
+        var text = this.add.text(400, 570, "Un botón ha aparecido", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5);
+        text.setScrollFactor(0);
+
+        var countdownText = this.add.text(650, 500, "Tiempo restante: 10s", {
+            fontFamily: 'InYourFaceJoffrey',
+            fontSize: "32px",
+            fill: "#400"
+        }).setOrigin(0.5);
+        countdownText.setScrollFactor(0);
+    
+        let remainingTime = 10; // Tiempo en segundos
+    
+        // Iniciar el contador regresivo
+        var countdownTimer = this.time.addEvent({
+            delay: 1000, // Cada 1 segundo
+            repeat: 9, // Se ejecuta 5 veces en total (de 5 a 0)
+            callback: () => {
+                remainingTime--;
+                countdownText.setText(`Tiempo restante: ${remainingTime}s`);
+            }
+        });
+
+        this.time.delayedCall(4000, () => {
+            text.destroy();
+            rect.destroy();
+        });
+
+        this.time.delayedCall(7500, () => {
+            
+            this.tweens.add({
+                targets: botonBonus,
+                alpha: 0,
+                duration: 200,
+                repeat: 5,  // Número de parpadeos
+                yoyo: true  // Para que parpadee
+            });
+    
+            
+            this.time.delayedCall(2500, () => {
+                botonBonus.destroy();
+                countdownText.destroy();
+            });
+        });
     }
 }
