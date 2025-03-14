@@ -18,6 +18,8 @@ export default class Level_1 extends Phaser.Scene{
     scoreText;
     followCamera = false;
     playerSprite = 'player2'; //localStorage.getItem("playerSprite");
+    collectedBonus = false;
+    soundPlayed = false;
 
     preload ()
     {
@@ -31,6 +33,10 @@ export default class Level_1 extends Phaser.Scene{
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
         this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.audio('deathSFX', './assets/sfx/KillSFX.wav');
+        this.load.audio('buttonSFX', './assets/sfx/alarm_emergencymeeting.wav');
+        this.load.audio('robotSFX', './assets/sfx/Megaphone4.wav');
+        this.load.audio('hitSFX', './assets/sfx/impostor_kill.wav');
     }
 
     create ()
@@ -147,6 +153,21 @@ export default class Level_1 extends Phaser.Scene{
 
         this.camera = this.cameras.cameras[0];
 
+        this.spawnedObjects = 0; 
+
+        this.time.addEvent({
+            delay: Phaser.Math.Between(8000, 15000), 
+            callback: () => {
+                if (this.spawnedObjects < 2) { 
+                    let x = Phaser.Math.Between(150, 1900);
+                    this.createBonus(x,50);
+                    this.spawnedObjects++; 
+                }
+            },
+            loop: true 
+        });
+
+
         this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
 
         this.pause.on('pointerdown', () => {
@@ -171,8 +192,13 @@ export default class Level_1 extends Phaser.Scene{
 
     update ()
     {
-        if (this.gameOver)
+        if (this.gameOver && !this.soundPlayed)
         {
+            this.sound.play('deathSFX',{ loop: false });
+            this.soundPlayed = true;
+        }
+
+        if (this.gameOver) {
             return;
         }
 
@@ -225,6 +251,9 @@ export default class Level_1 extends Phaser.Scene{
     {
         star.disableBody(true, true);
 
+        this.sound.setVolume(0.3);
+        this.sound.play('robotSFX',{ loop: false });
+
         //  Add and update the score
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
@@ -256,14 +285,7 @@ export default class Level_1 extends Phaser.Scene{
             }
             bomb.allowGravity = false;
         }
-
-        if (this.score == 100) {
-            this.createBonus(230,50);
-        }
-
-        if (this.score == 200) {
-            this.createBonus(1850,50);
-        }
+        //this.sound.setVolume(1);
     }
 
     hitBomb (player, bomb)
@@ -272,6 +294,8 @@ export default class Level_1 extends Phaser.Scene{
             return;
         }
         
+        this.sound.play('hitSFX',{ loop: false });
+
         this.live--;
         this.lives[this.live].destroy();
 
@@ -318,19 +342,24 @@ export default class Level_1 extends Phaser.Scene{
     collectBonus(player, boton){
         boton.disableBody(true, true);
 
+        this.sound.play('buttonSFX',{ loop: false });
+
         this.score += 50;
         this.scoreText.setText('Score: ' + this.score);
 
         this.scene.launch('Bonus');
         this.scene.pause();
+
+        this.countdownTimer.remove();
+        this.countdownText.destroy();
+        this.collectedBonus = true;
     }
 
     updateData(parent, key, data){
         if(key === 'bonusScore'){
             this.score += data;
-            this.scoreText.setText('Score: ' + this.score);
-            this.registry.set('bonusScore', 0);
         }
+        this.scoreText.setText('Score: ' + this.score);
     }
 
     createBonus(x,y){
@@ -343,22 +372,22 @@ export default class Level_1 extends Phaser.Scene{
         var text = this.add.text(400, 570, "Un botón ha aparecido", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5);
         text.setScrollFactor(0);
 
-        var countdownText = this.add.text(650, 500, "Tiempo restante: 10s", {
+        this.countdownText = this.add.text(650, 500, "Tiempo restante: 7s", {
             fontFamily: 'InYourFaceJoffrey',
             fontSize: "32px",
             fill: "#400"
         }).setOrigin(0.5);
-        countdownText.setScrollFactor(0);
+        this.countdownText.setScrollFactor(0);
     
-        let remainingTime = 10; // Tiempo en segundos
+        let remainingTime = 7; // Tiempo en segundos
     
         // Iniciar el contador regresivo
-        var countdownTimer = this.time.addEvent({
+        this.countdownTimer = this.time.addEvent({
             delay: 1000, // Cada 1 segundo
-            repeat: 9, // Se ejecuta 5 veces en total (de 5 a 0)
+            repeat: 6, // Se ejecuta 5 veces en total (de 5 a 0)
             callback: () => {
                 remainingTime--;
-                countdownText.setText(`Tiempo restante: ${remainingTime}s`);
+                this.countdownText.setText(`Tiempo restante: ${remainingTime}s`);
             }
         });
 
@@ -367,7 +396,7 @@ export default class Level_1 extends Phaser.Scene{
             rect.destroy();
         });
 
-        this.time.delayedCall(7500, () => {
+        this.time.delayedCall(4500, () => {
             
             this.tweens.add({
                 targets: botonBonus,
@@ -379,8 +408,13 @@ export default class Level_1 extends Phaser.Scene{
     
             
             this.time.delayedCall(2500, () => {
+                if (!this.collectedBonus) {
+                    let newStar = this.physics.add.sprite(botonBonus.x, botonBonus.y, 'robot');
+                    this.stars.add(newStar);
+                    this.collectedBonus = false;    
+                }
                 botonBonus.destroy();
-                countdownText.destroy();
+                this.countdownText.destroy();
             });
         });
     }

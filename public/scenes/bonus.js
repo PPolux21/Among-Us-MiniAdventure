@@ -6,6 +6,7 @@ export default class Bonus extends Phaser.Scene{
 
     preload(){
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
+        this.load.image('doors', './assets/images/doors.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
         this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
     }
@@ -14,6 +15,8 @@ export default class Bonus extends Phaser.Scene{
         var r1 = this.add.rectangle(400, 300, 650, 500, 0X000000 );
         r1.setAlpha(0.93);
         this.add.text(400, 100, "BONUS\nExpulsa al impostor", {fontFamily: 'InYourFaceJoffrey', fontSize: "28px", fill: "#fff", align: 'center' }).setOrigin(0.5);
+
+        this.add.image(400,450,'doors');
 
         var graphics = this.add.graphics();
         graphics.lineStyle(4, 0xffffff);
@@ -54,7 +57,7 @@ export default class Bonus extends Phaser.Scene{
                     gameObject.x = 400;
                     gameObject.y = 450;
                     this.droppable = false;
-                    this.registry.set('bonusScore', 50);        
+                    this.registry.set('bonusScore', 30);        
 
                     // Si se dropea en el área y no es impostor
                 } else if (Phaser.Geom.Rectangle.ContainsPoint(this.dropZone.getBounds(), gameObject) && gameObject != this.imposter) {
