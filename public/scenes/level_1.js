@@ -191,8 +191,6 @@ export default class Level_1 extends Phaser.Scene{
         });
 
         this.registry.events.on('changedata', this.updateData, this);
-
-        this.add.image(2210,495,'finishGate');
     }
 
     update ()
