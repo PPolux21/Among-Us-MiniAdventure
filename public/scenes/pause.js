@@ -19,7 +19,8 @@ export default class Pause extends Phaser.Scene{
 
     update(){
         if (this.endPause.isDown) {
-            this.scene.resume("Nivel1"); // Reanuda la escena del juego
+            this.levelKey = this.registry.get('levelPause');
+            this.scene.resume(this.levelKey); // Reanuda la escena del juego
             this.scene.stop(); // Cierra el menú de pausa
         }
     }

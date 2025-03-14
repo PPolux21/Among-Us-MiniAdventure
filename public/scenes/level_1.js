@@ -20,6 +20,7 @@ export default class Level_1 extends Phaser.Scene{
     playerSprite = 'player2'; //localStorage.getItem("playerSprite");
     collectedBonus = false;
     soundPlayed = false;
+    showFinishGate = false;
 
     preload ()
     {
@@ -29,6 +30,7 @@ export default class Level_1 extends Phaser.Scene{
         this.load.image('robot', './assets/images/robot.png');
         this.load.image('pause', './assets/images/pause.png');
         this.load.image('boton', './assets/images/boton.png');
+        this.load.image('finishGate', './assets/images/finishGate.png');
         this.load.image('imposter-der', './assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
@@ -172,6 +174,7 @@ export default class Level_1 extends Phaser.Scene{
 
         this.pause.on('pointerdown', () => {
             if (!this.scene.isPaused()) {
+                this.registry.set('levelPause', "Nivel1");
                 this.scene.launch("Pause");
                 this.scene.pause();
             }
@@ -188,6 +191,8 @@ export default class Level_1 extends Phaser.Scene{
         });
 
         this.registry.events.on('changedata', this.updateData, this);
+
+        this.add.image(2210,495,'finishGate');
     }
 
     update ()
@@ -199,6 +204,8 @@ export default class Level_1 extends Phaser.Scene{
         }
 
         if (this.gameOver) {
+            this.scene.launch('Gameover');
+            this.scene.pause();
             return;
         }
 
@@ -245,6 +252,24 @@ export default class Level_1 extends Phaser.Scene{
                 bomb.setTexture('imposter-der');
             }
         });
+
+        if ((this.player.x >= 2210 && this.player.y >= 490) && this.showFinishGate) {
+            this.physics.pause();
+            
+            var rect = this.add.rectangle(400, 100, 220, 50, 0X000, 0.75 ).setScrollFactor(0);
+
+            var text = this.add.text(400, 100, "Nivel Completado", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5).setScrollFactor(0);
+
+
+            this.time.delayedCall(3000, () => {
+                text.destroy();
+                rect.destroy();
+                this.scene.launch("Nivel2");
+                this.scene.stop();
+            });
+        }
+ 
+        
     }
 
     collectStar (player, star)
@@ -285,7 +310,10 @@ export default class Level_1 extends Phaser.Scene{
             }
             bomb.allowGravity = false;
         }
-        //this.sound.setVolume(1);
+        
+        if (this.stars.countActive(true) === 0){
+            this.finishLevel();
+        }
     }
 
     hitBomb (player, bomb)
@@ -366,6 +394,8 @@ export default class Level_1 extends Phaser.Scene{
         var botonBonus = this.bonus.create(x,y, 'boton');
         botonBonus.setBounce(0.5);
 
+        this.collectedBonus = false;    
+
         var rect = this.add.rectangle(400, 570, 220, 50, 0X000 );
         rect.setAlpha(0.75);
         rect.setScrollFactor(0);
@@ -417,5 +447,23 @@ export default class Level_1 extends Phaser.Scene{
                 this.countdownText.destroy();
             });
         });
+    }
+
+    finishLevel(){
+        var rect = this.add.rectangle(400, 100, 220, 50, 0X000 );
+        rect.setAlpha(0.75);
+        rect.setScrollFactor(0);
+        var text = this.add.text(400, 100, "Escapa por la puerta", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5);
+        text.setScrollFactor(0);
+
+        this.time.delayedCall(4000, () => {
+            text.destroy();
+            rect.destroy();
+        });
+
+        this.showFinishGate = true;
+
+        this.add.image(2210,495,'finishGate');
+
     }
 }

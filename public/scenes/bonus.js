@@ -58,6 +58,10 @@ export default class Bonus extends Phaser.Scene{
                     gameObject.y = 450;
                     this.droppable = false;
                     this.registry.set('bonusScore', 30);        
+                    this.input.setDraggable(crewmate1,false);
+                    this.input.setDraggable(crewmate2,false);
+                    this.input.setDraggable(this.imposter,false);
+                    this.createButton();
 
                     // Si se dropea en el área y no es impostor
                 } else if (Phaser.Geom.Rectangle.ContainsPoint(this.dropZone.getBounds(), gameObject) && gameObject != this.imposter) {
@@ -65,6 +69,10 @@ export default class Bonus extends Phaser.Scene{
                     gameObject.y = 450;
                     this.droppable = false;
                     this.registry.set('bonusScore', 0);
+                    this.input.setDraggable(crewmate1,false);
+                    this.input.setDraggable(crewmate2,false);
+                    this.input.setDraggable(this.imposter,false);
+                    this.createButton();
                     
                 } else {
                     // Regresa a la posición inicial
@@ -82,9 +90,25 @@ export default class Bonus extends Phaser.Scene{
     }
 
     update(){
-        if (this.endPause.isDown) {
-            this.scene.resume("Nivel1"); // Reanuda la escena del juego
-            this.scene.stop(); // Cierra el menú de pausa
-        }
+        
+    }
+
+    createButton(){
+        // Cuadro de continuar
+        var continueRect = this.add.rectangle(400, 560, 150, 50, 0xFFFFFF);
+
+        // Agregar texto encima
+        var text = this.add.text(400, 560, "CONTINUAR", {
+        fontSize: "32px",
+        fontFamily: "InYourFaceJoffrey",
+        color: "#000000"
+        }).setOrigin(0.5);
+
+        continueRect.setInteractive();
+
+        continueRect.on('pointerdown', () => {
+            this.scene.resume("Nivel1");
+            this.scene.stop();
+        });
     }
 }
