@@ -4,6 +4,7 @@ export default class Level_1 extends Phaser.Scene{
         super({ key: 'Nivel1' });
     }
 
+    //inicialización de variables globales
     camera;
     player;
     stars;
@@ -43,18 +44,20 @@ export default class Level_1 extends Phaser.Scene{
 
     create ()
     {
+        // setea el registro bonusScore en 0 para si uso futuro
         this.registry.set('bonusScore', 0);
-        //  A simple background for our game
+        
+        // se construlle el nivel
+        // se agrega la imagen de fondo
         this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);
 
+        // se establecen las reglas de tamaño del nivel
         this.physics.world.setBounds(0, 0, 2250, 600);
         this.cameras.main.setBounds(0, 0, 2250, 600);
 
-        //  The platforms group contains the ground and the 2 ledges we can jump on
+        // se crea el grupo de plataformas y se crean sus hijos 
         this.platforms = this.physics.add.staticGroup();
 
-        //  Here we create the ground.
-        //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
         this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
         this.platforms.create(1200, 568, 'ground').setScale(2).refreshBody();
         this.platforms.create(2000, 568, 'ground').setScale(2).refreshBody();
@@ -67,18 +70,15 @@ export default class Level_1 extends Phaser.Scene{
         this.platforms.create(50, 250, 'ground');
         this.platforms.create(1850, 250, 'ground');
 
-
         this.platforms.create(750, 220, 'ground');
         this.platforms.create(1250, 220, 'ground');
 
-        // The player and its settings
-        this.player = this.physics.add.sprite(100, 450, this.playerSprite); //liego hacer cambio de personaje
-
-        //  Player physics properties. Give the little guy a slight bounce.
+        // se inicializa al jugador y sus prpiedades
+        this.player = this.physics.add.sprite(100, 450, this.playerSprite);
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
 
-        //  Our player animations, turning, walking left and walking right.
+        //  se establecen los sprites a usar en el personaje del jugador
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers(this.playerSprite, { start: 0, end: 3 }),
@@ -99,80 +99,77 @@ export default class Level_1 extends Phaser.Scene{
             repeat: -1
         });
 
-        //  Input Events
+        //  se mapean las teclas a usar en el juego
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.cursors.esc = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);    
 
-        //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
+        //  se crea el grupo de los coleccionables
+        //  y se colocan todos los coleccionables en el mapa
         this.stars = this.physics.add.group({
             key: 'robot',
             repeat: 23,
-            setXY: { x: 12, y: 0, stepX: (50 + Phaser.Math.Between(0,40)) }
+            setXY: { x: 12, y: 0, stepX: (70 + Phaser.Math.Between(0,20)) }
+        });
+        
+        // al momento de aparecer a cada coleccionable de le coloca un rango de rebote diferente
+        this.stars.children.iterate((child) => {
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
+        // se crea el grupo para los objetos especiales
         this.bonus = this.physics.add.group();
 
-        this.stars.children.iterate((child) => {
-
-            //  Give each star a slightly different bounce
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-        });
-
+        // se crea el grupo de los enemigos
         this.bombs = this.physics.add.group();
 
-        //  The score
+        //  Se crea un texto que mostrará el puntaje del jugador
         this.scoreText = this.add.text(670, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
         this.scoreText.setScrollFactor(0);
 
-        //vidas
-        // this.lives = this.physics.add.staticGroup();
-        // this.lives.create(140, 40, 'heart').setScale(1.5).refreshBody();
-        // this.lives.create(90, 40, 'heart').setScale(1.5).refreshBody();
-        // this.lives.create(40, 40, 'heart').setScale(1.5).refreshBody();
+        // se crean las 3 vidas a mostrarse en pantalla dentro de un arreglo
         for (let i=0; i<3; i++){
             this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
             this.lives[i].setScrollFactor(0);
             this.lives[i].setDepth(1);
         };
 
-        //cooldown de vidas
+        // cooldown de daño al jugador
         this.cooldownActive = false;
         this.cooldownTime = 2000;
 
-        //  Collide the player and the stars with the platforms
+        //Se agregan los colliders entre los objetos
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.stars, this.platforms);
         this.physics.add.collider(this.bombs, this.platforms);
         this.physics.add.collider(this.bonus, this.platforms);
 
-        //  Checks to see if the player overlaps with any of the this.stars, if he does call the collectStar function
+        //  Se agregan los overlap que detectan cuando el jugadoor y 
+        //  los objetos se encuenrtran en la misma posición para luege ejecutar una accion específica
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
         this.physics.add.overlap(this.player, this.bonus, this.collectBonus, null, this);
-
         this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
+        // establece la cámara como variable para su manejo
         this.camera = this.cameras.cameras[0];
 
-        this.spawnedObjects = 0; 
-
+        // se crea el evento para aparecer los objetos especiales
         this.time.addEvent({
             delay: Phaser.Math.Between(8000, 15000), 
             callback: () => {
-                if (this.spawnedObjects < 2) { 
-                    let x = Phaser.Math.Between(150, 1900);
-                    this.createBonus(x,50);
-                    this.spawnedObjects++; 
-                }
+                let x = Phaser.Math.Between(150, 1900);
+                this.createBonus(x,50);
+                this.spawnedObjects++;             
             },
-            loop: true 
+            repeat: 1
         });
 
-
+        // genera la imagen de pausa
         this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
+        this.pause.setInteractive();
 
-        this.pause.on('pointerdown', () => {
+        // se crean los eventos del botón de pausa
+        this.pause.on('pointerdown', () => {    // evento al hacer clic
             if (!this.scene.isPaused()) {
                 this.registry.set('levelPause', "Nivel1");
                 this.scene.launch("Pause");
@@ -180,39 +177,46 @@ export default class Level_1 extends Phaser.Scene{
             }
         });
 
-        this.pause.setInteractive();
-
-        this.pause.on('pointerover', () => {
-            this.pause.setTint(0xc0c0c0); // Cambia el color de la imagen al pasar el mouse
+        this.pause.on('pointerover', () => {    // evento al hacer hover
+            this.pause.setTint(0xc0c0c0);
         });
 
-        this.pause.on('pointerout', () => {
-            this.pause.clearTint(); // Restaura el color original al salir
+        this.pause.on('pointerout', () => {    // evento al dejar de hacer hover
+            this.pause.clearTint();
         });
 
+        // crea evento que escucha cuando se actualizan los registros
         this.registry.events.on('changedata', this.updateData, this);
     }
 
     update ()
     {
+        // revisa cuando se murió el jugador y no se ha reproducido el sonido
+        //      cuando se cumple reproduce el sonido de gameover
         if (this.gameOver && !this.soundPlayed)
         {
             this.sound.play('deathSFX',{ loop: false });
             this.soundPlayed = true;
         }
 
+        // revisa cuando se murió el jugador
+        //      cuando se cumple lanza la escena de game over 
+        //      y pausa la escena actual del nivel
         if (this.gameOver) {
             this.scene.launch('Gameover');
             this.scene.pause();
             return;
         }
 
+        // se establecen los movimientos del jugador
         if (this.cursors.left.isDown)
         {
             this.player.setVelocityX(-160);
 
             this.player.anims.play('left', true);
 
+            // revisa cuando el jugador está muy cerca del borde izquierdo 
+            //      cuando se cumple hace que la camara deje de seguir al jugador
             if (this.player.x < 195 && this.followCamera) {
                 this.camera.stopFollow();
                 this.followCamera = false;
@@ -224,6 +228,8 @@ export default class Level_1 extends Phaser.Scene{
 
             this.player.anims.play('right', true);
 
+            // revisa cuando el jugador se aleja del borde izquierdo 
+            //      cuando se cumple hace que la camara empiece a seguir al jugador
             if (this.player.x >= 300 && !this.followCamera) {
                 this.followCamera = true;
                 this.camera.startFollow(this.player, true, 0.5, 0, -100, (this.player.y - 300) );
@@ -242,7 +248,8 @@ export default class Level_1 extends Phaser.Scene{
             this.player.setVelocityY(-420);
         }
 
-        
+        // crea el cambio de sprite del enemigo dependiendo de 
+        // la direccion a la que se dirige
         this.bombs.children.iterate((bomb) => {
             if(bomb.body.velocity.x < 0){
                 bomb.setTexture('imposter-izq');
@@ -251,6 +258,7 @@ export default class Level_1 extends Phaser.Scene{
             }
         });
 
+        // revisa cuando el jugador estpa en la zona de la puerta para finalizar el juego
         if ((this.player.x >= 2210 && this.player.y >= 490) && this.showFinishGate) {
             this.physics.pause();
             
@@ -270,27 +278,26 @@ export default class Level_1 extends Phaser.Scene{
         
     }
 
+    // método para cuando se obtiene una estrella
     collectStar (player, star)
     {
         star.disableBody(true, true);
 
+        // repoduce el sonido de recoger objeto normal
         this.sound.setVolume(0.3);
         this.sound.play('robotSFX',{ loop: false });
 
-        //  Add and update the score
+        //  Actualiza la puntuación
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
 
+        // revisa si la cantidad de objetos restantes es multiplo de 6
+        //      de ser así crea un nuevo enemigo
         if (this.stars.countActive(true)%6 === 0)
         {
-            /*
-            //  A new batch of stars to collect
-            this.stars.children.iterate((child) => {
 
-                child.enableBody(true, child.x, 0, true, true);
-
-            });*/
-
+            // dependiendo de la posicion del jugador se determina donde aparecera el enemigo
+            // relativamente al jugador
             var x = (player.x < 1600) ? player.x + Phaser.Math.Between(150, 300) : player.x - Phaser.Math.Between(150, 300);
             
             if (Math.floor(Math.random() * 2)) {
@@ -308,39 +315,46 @@ export default class Level_1 extends Phaser.Scene{
             }
             bomb.allowGravity = false;
         }
-        
+
+        // revisa si es que ya se consumieron todos los objetos
+        //      de ser así se llama al método para terminar el nivel
         if (this.stars.countActive(true) === 0){
             this.finishLevel();
         }
     }
 
+    // método cuando el jugador se encuentra con un enemigo
     hitBomb (player, bomb)
     {
+        // revisa que el cooldown esté activo
+        //      cuando estosucede termina el método
         if(this.cooldownActive){
             return;
         }
         
+        // se reproduce un sonido de daño
         this.sound.play('hitSFX',{ loop: false });
 
+        // se resta una vida y se elimina un corazón de la pantalla
         this.live--;
         this.lives[this.live].destroy();
 
+        // por un momento se colorea el jugador para indicar el daño
         player.setTint(0xfb7474);
         
+        // revisa si el jugador está muerto
         if(this.live <= 0){
 
             this.gameOver = true;
-
             this.physics.pause();
-
             player.setTint(0xff0000);
-
             player.anims.play('turn'); 
 
         }else{
 
             let tintChange = false;
 
+            // se crea efecto de parpadeo mientras no le pueden hacer daño al jugador
             let tintEvent = this.time.addEvent({
                 delay: 250,
                 callback: () => {
@@ -365,6 +379,7 @@ export default class Level_1 extends Phaser.Scene{
 
     }
 
+    // método que se activa cuando se obtiene un objeto especial
     collectBonus(player, boton){
         boton.disableBody(true, true);
 
@@ -381,6 +396,7 @@ export default class Level_1 extends Phaser.Scene{
         this.collectedBonus = true;
     }
 
+    // método que recupera los puntos ganados en la mision del objeto especial
     updateData(parent, key, data){
         if(key === 'bonusScore'){
             this.score += data;
@@ -388,6 +404,7 @@ export default class Level_1 extends Phaser.Scene{
         this.scoreText.setText('Score: ' + this.score);
     }
 
+    // método que crea un nuevo objeto especial
     createBonus(x,y){
         var botonBonus = this.bonus.create(x,y, 'boton');
         botonBonus.setBounce(0.5);
@@ -447,6 +464,7 @@ export default class Level_1 extends Phaser.Scene{
         });
     }
 
+    // método para cuando se cumplen las condiciones de terminar el nivel
     finishLevel(){
         var rect = this.add.rectangle(400, 100, 220, 50, 0X000 );
         rect.setAlpha(0.75);
