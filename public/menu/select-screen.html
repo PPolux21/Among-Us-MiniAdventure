@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" href="../assets/css/estilos.css">
+	<link rel="stylesheet" href="../assets/css/alinear2.css">
+	<title>CSS Grid</title>
+</head>
+<body>
+
+	<div class="contenedor">
+		<a href="../index.html" class="boton-esquina"></a>
+		<img src="../assets/assets-menu/Logo-AmongUs.png" class="logo-juego imagen-1">
+		<img src="../assets/assets-menu/logo-mini-redimensionado.png" class="imagen-2">
+        <img src="../assets/assets-menu/CharacterSelectionText.png" class="select-image">
+        <img src="../assets/assets-menu/icono-player-1.png" class="player-1" id="player-1" onclick="selectPlayer('player1')">
+        <img src="../assets/assets-menu/icono-player-2.png" class="player-2" id="player-2" onclick="selectPlayer('player2')">
+        
+	</div>
+
+	<audio id="musica-juego" class="audio-music" controls autoplay loop>
+		<source src="../assets/sonidos/Title Screen.wav" type="audio/wav">
+	</audio>
+
+	<button id="boton-reproducir" class="reproducir-musica">Reproducir</button>
+	<button id="boton-pausa" class="pausar-musica">Pausar</button>
+	<script src="../scripts/musica-control.js"></script>
+
+    <script>
+        function selectPlayer(player) {
+            localStorage.setItem('selectedPlayer', player);
+            window.location.href = '../menu/name.html'; 
+        }
+    </script>
+
+</body>
+</html>
