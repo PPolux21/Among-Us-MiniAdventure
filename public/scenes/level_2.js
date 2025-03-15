@@ -49,7 +49,7 @@ export default class Level_2 extends Phaser.Scene{
         var jugadores = JSON.parse(localStorage.getItem("players"));
         this.playerSprite = jugadores[jugadores.length - 1].player;
 
-        this.score = this.registry.get('score');
+        this.score = this.registry.get('score') || 0;
 
         this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);       //fondo
 
@@ -368,8 +368,12 @@ export default class Level_2 extends Phaser.Scene{
     }
 
     victory(){
-        console.log("Ganaste el juego");
-        this.postRecord();
+        this.registry.set('score', this.score);
+        this.time.delayedCall(2500, () => {
+            this.scene.launch("WinScreen");
+            this.scene.stop();
+            this.postRecord();
+        });
     }
 
     postRecord(){
