@@ -7,6 +7,8 @@ function cargarRecords(){
         const tbody = document.querySelector('.tabla-records tbody');
         tbody.innerHTML = '';
 
+        players.sort((a, b) => b.score - a.score);
+
         players.forEach(player => {
             const fila = document.createElement('tr');
             fila.innerHTML = `

@@ -34,7 +34,7 @@ export default class Gameover extends Phaser.Scene{
         continueRect.setInteractive();
 
         continueRect.on('pointerdown', () => {
-            window.href = window.location.replace("http://localhost:8080");;
+            window.location.replace("http://localhost:8080");
         });
     }
 }

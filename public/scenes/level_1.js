@@ -18,7 +18,7 @@ export default class Level_1 extends Phaser.Scene{
     gameOver = false;
     scoreText;
     followCamera = false;
-    playerSprite = 'player2'; //localStorage.getItem("playerSprite");
+    playerSprite = ''; //localStorage.getItem("playerSprite");
     collectedBonus = false;
     soundPlayed = false;
     showFinishGate = false;
@@ -44,6 +44,9 @@ export default class Level_1 extends Phaser.Scene{
 
     create ()
     {
+        var jugadores = JSON.parse(localStorage.getItem("players"));
+        this.playerSprite = jugadores[jugadores.length - 1].player;
+
         // setea el registro bonusScore en 0 para si uso futuro
         this.registry.set('bonusScore', 0);
         
@@ -130,10 +133,16 @@ export default class Level_1 extends Phaser.Scene{
 
         // se crean las 3 vidas a mostrarse en pantalla dentro de un arreglo
         for (let i=0; i<3; i++){
-            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
+            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 60, 'heart').setScale(1.5);
             this.lives[i].setScrollFactor(0);
             this.lives[i].setDepth(1);
         };
+
+        var aliasText = this.add.text(20,10,jugadores[jugadores.length - 1].name,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+
+        var dateText = this.add.text(520,10,jugadores[jugadores.length - 1].fecha,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+
+        var levelText = this.add.text(220,10,"Nivel 1",{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
 
         // cooldown de daño al jugador
         this.cooldownActive = false;
@@ -206,6 +215,7 @@ export default class Level_1 extends Phaser.Scene{
         //      y pausa la escena actual del nivel
         if (this.gameOver) {
             this.scene.launch('Gameover');
+            this.postRecord();
             this.scene.pause();
             return;
         }
@@ -264,6 +274,8 @@ export default class Level_1 extends Phaser.Scene{
         if ((this.player.x >= 2210 && this.player.y >= 490) && this.showFinishGate) {
             this.physics.pause();
             
+            this.registry.set('score', this.score);
+
             var rect = this.add.rectangle(400, 100, 220, 50, 0X000, 0.75 ).setScrollFactor(0);
 
             var text = this.add.text(400, 100, "Nivel Completado", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5).setScrollFactor(0);
@@ -483,5 +495,15 @@ export default class Level_1 extends Phaser.Scene{
 
         this.add.image(2210,495,'finishGate');
 
+    }
+
+    postRecord(){
+        var jugadores = JSON.parse(localStorage.getItem("players"));
+
+        if (jugadores[jugadores.length - 1].score > this.score) {
+            jugadores[jugadores.length - 1].score = this.score;
+        }
+
+        localStorage.setItem("players", JSON.stringify(jugadores));
     }
 }

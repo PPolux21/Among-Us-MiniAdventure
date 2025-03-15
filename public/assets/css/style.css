@@ -13,4 +13,46 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-image: url(../assets-menu/fondo.gif);
 }
+
+
+    /* pruebas con el audio y su estilo */
+    .audio-music{
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        visibility:hidden ;
+    }
+
+    .audio-music controls{
+        background: transparent;
+    }
+
+    .reproducir-musica{
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 150px;
+        height: 45px;
+        background-image: url(../assets-menu/fondo-2.jpg);
+        color: white;
+        font-family: 'InYourFaceJoffrey';
+        font-size: 32px;
+    }
+
+    .pausar-musica{
+        display: block;
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        width: 150px;
+        height: 45px;
+        background-image: url(../assets-menu/fondo-2.jpg);
+        color: white;
+        font-family: 'InYourFaceJoffrey';
+        font-size: 32px;
+    }
