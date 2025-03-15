@@ -56,7 +56,6 @@ export default class Level_1 extends Phaser.Scene{
         this.platforms.create(50, 250, 'ground');
         this.platforms.create(1850, 250, 'ground');
 
-
         this.platforms.create(750, 220, 'ground');
         this.platforms.create(1250, 220, 'ground');
 
@@ -112,12 +111,9 @@ export default class Level_1 extends Phaser.Scene{
         //  The score
         this.scoreText = this.add.text(670, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
         this.scoreText.setScrollFactor(0);
+        this.scoreText.setDepth(1);
 
         //vidas
-        // this.lives = this.physics.add.staticGroup();
-        // this.lives.create(140, 40, 'heart').setScale(1.5).refreshBody();
-        // this.lives.create(90, 40, 'heart').setScale(1.5).refreshBody();
-        // this.lives.create(40, 40, 'heart').setScale(1.5).refreshBody();
         for (let i=0; i<3; i++){
             this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
             this.lives[i].setScrollFactor(0);
@@ -135,7 +131,7 @@ export default class Level_1 extends Phaser.Scene{
 
         //  Checks to see if the player overlaps with any of the this.stars, if he does call the collectStar function
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
-
+        
         this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
         this.camera = this.cameras.cameras[0];
@@ -144,7 +140,7 @@ export default class Level_1 extends Phaser.Scene{
 
         this.pause.on('pointerdown', () => {
             if (!this.isPaused) {
-                this.scene.launch("Pause");
+                this.scene.launch("Pause", { fromScene: this });
                 this.scene.pause();
                 this.isPaused = false;
             }

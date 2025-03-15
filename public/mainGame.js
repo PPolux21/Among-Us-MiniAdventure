@@ -1,4 +1,5 @@
 import Level_1 from './scenes/level_1.js';
+import Level_2 from './scenes/level_2.js';
 import Pause from "./scenes/pause.js";
 
 const config = {
@@ -12,7 +13,7 @@ const config = {
             debug: false
         }
     },
-    scene: [Level_1, Pause]
+    scene: [Level_2, Pause]
 };
 
 const game = new Phaser.Game(config);
