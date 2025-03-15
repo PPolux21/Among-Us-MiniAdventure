@@ -5,7 +5,7 @@ export default class Gameover extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('gameover', './assets/images/death_BG.png');
+        this.load.image('gameover', '../assets/images/death_BG.png');
     }
 
     create(){
@@ -34,7 +34,7 @@ export default class Gameover extends Phaser.Scene{
         continueRect.setInteractive();
 
         continueRect.on('pointerdown', () => {
-            window.location.reload();
+            window.href = window.location.replace("http://localhost:8080");;
         });
     }
 }

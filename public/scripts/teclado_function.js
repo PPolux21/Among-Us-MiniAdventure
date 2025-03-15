@@ -9,7 +9,9 @@ letras.forEach(letra => {
             inputNombre.value = inputNombre.value.slice(0, -1);
         } else if (letraTexto === 'ENTER') {
             if (inputNombre.value.length < 4) {
-                swal("Nombre muy corto :(")
+                //swal("Nombre muy corto :(")
+                inputNombre.value = "";
+                inputNombre.setAttribute('placeholder',"Nombre muy corto");
             } else {
                 const selectedPlayer = localStorage.getItem('selectedPlayer');
                 const fecha = new Date().toISOString().split('T')[0];

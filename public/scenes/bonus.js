@@ -5,10 +5,10 @@ export default class Bonus extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
-        this.load.image('doors', './assets/images/doors.png');
-        this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
-        this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.image('imposter-izq', '../assets/images/impostor-izquierda.png');
+        this.load.image('doors', '../assets/images/doors.png');
+        this.load.spritesheet('player1', '../assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.spritesheet('player2', '../assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
     }
 
     create(){

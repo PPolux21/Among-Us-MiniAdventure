@@ -30,18 +30,18 @@ export default class Level_2 extends Phaser.Scene{
     redColor = "0xff0000";
 
     preload(){
-        this.load.image('sky', './assets/images/cafeteria_cleanup.png');
-        this.load.image('heart', './assets/images/vida.png');
-        this.load.image('ground', './assets/images/plataforma.png');
-        this.load.image('robot', './assets/images/robot.png');
-        this.load.image('pause', './assets/images/pause.png');
-        this.load.image('imposter-der', './assets/images/impostor-derecha.png');
-        this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
-        this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
-        this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
-        this.load.audio('deathSFX', './assets/sfx/KillSFX.wav');
-        this.load.audio('robotSFX', './assets/sfx/Megaphone4.wav');
-        this.load.audio('hitSFX', './assets/sfx/impostor_kill.wav');
+        this.load.image('sky', '../assets/images/cafeteria_cleanup.png');
+        this.load.image('heart', '../assets/images/vida.png');
+        this.load.image('ground', '../assets/images/plataforma.png');
+        this.load.image('robot', '../assets/images/robot.png');
+        this.load.image('pause', '../assets/images/pause.png');
+        this.load.image('imposter-der', '../assets/images/impostor-derecha.png');
+        this.load.image('imposter-izq', '../assets/images/impostor-izquierda.png');
+        this.load.spritesheet('player1', '../assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.spritesheet('player2', '../assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.audio('deathSFX', '../assets/sfx/KillSFX.wav');
+        this.load.audio('robotSFX', '../assets/sfx/Megaphone4.wav');
+        this.load.audio('hitSFX', '../assets/sfx/impostor_kill.wav');
     }
 
     create(){
