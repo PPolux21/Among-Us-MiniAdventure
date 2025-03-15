@@ -39,6 +39,9 @@ export default class Level_2 extends Phaser.Scene{
         this.load.image('imposter-izq', './assets/images/impostor-izquierda.png');
         this.load.spritesheet('player1', './assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
         this.load.spritesheet('player2', './assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
+        this.load.audio('deathSFX', './assets/sfx/KillSFX.wav');
+        this.load.audio('robotSFX', './assets/sfx/Megaphone4.wav');
+        this.load.audio('hitSFX', './assets/sfx/impostor_kill.wav');
     }
 
     create(){
@@ -140,6 +143,8 @@ export default class Level_2 extends Phaser.Scene{
         this.camera = this.cameras.cameras[0];
 
         this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
+        this.pause.setInteractive();
+        this.pause.setDepth(1);
 
         this.pause.on('pointerdown', () => {
             if (!this.isPaused) {
@@ -148,8 +153,6 @@ export default class Level_2 extends Phaser.Scene{
                 this.isPaused = false;
             }
         });
-
-        this.pause.setInteractive();
 
         this.pause.on('pointerover', () => {
             this.pause.setTint(0xc0c0c0); // Cambia el color de la imagen al pasar el mouse
@@ -161,7 +164,20 @@ export default class Level_2 extends Phaser.Scene{
     }
 
     update(){
-        if (this.gameOver){
+        // revisa cuando se murió el jugador y no se ha reproducido el sonido
+        //      cuando se cumple reproduce el sonido de gameover
+        if (this.gameOver && !this.soundPlayed)
+        {
+            this.sound.play('deathSFX',{ loop: false });
+            this.soundPlayed = true;
+        }
+
+        // revisa cuando se murió el jugador
+        //      cuando se cumple lanza la escena de game over 
+        //      y pausa la escena actual del nivel
+        if (this.gameOver) {
+            this.scene.launch('Gameover');
+            this.scene.pause();
             return;
         }
     
@@ -210,6 +226,10 @@ export default class Level_2 extends Phaser.Scene{
     collectStar (player, star){
         star.disableBody(true, true);
 
+        // repoduce el sonido de recoger objeto normal
+        this.sound.setVolume(0.3);
+        this.sound.play('robotSFX',{ loop: false });
+
         //  Add and update the score
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
@@ -224,6 +244,9 @@ export default class Level_2 extends Phaser.Scene{
         if(this.cooldownActive){
             return;
         }
+
+        // se reproduce un sonido de daño
+        this.sound.play('hitSFX',{ loop: false });
         
         this.live--;
         this.lives[this.live].destroy();

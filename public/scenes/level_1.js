@@ -168,6 +168,7 @@ export default class Level_1 extends Phaser.Scene{
         // genera la imagen de pausa
         this.pause = this.add.image(400, 30, 'pause').setScrollFactor(0);
         this.pause.setInteractive();
+        this.pause.setDepth(1);
 
         // se crean los eventos del botón de pausa
         this.pause.on('pointerdown', () => {    // evento al hacer clic
