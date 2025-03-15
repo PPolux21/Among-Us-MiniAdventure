@@ -43,6 +43,7 @@ export default class Level_2 extends Phaser.Scene{
         this.load.audio('deathSFX', '../assets/sfx/KillSFX.wav');
         this.load.audio('knifeSFX', '../assets/sfx/KnifeStab4.wav');
         this.load.audio('hitSFX', '../assets/sfx/impostor_kill.wav');
+        this.load.audio('victorySFX', '../assets/sfx/victory_crew.wav');
     }
 
     create(){
@@ -368,6 +369,8 @@ export default class Level_2 extends Phaser.Scene{
     }
 
     victory(){
+        this.sound.setVolume(0.15);
+        this.sound.play('victorySFX',{ loop: false });
         this.registry.set('score', this.score);
         this.time.delayedCall(2500, () => {
             this.scene.launch("WinScreen");

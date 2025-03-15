@@ -40,6 +40,7 @@ export default class Level_1 extends Phaser.Scene{
         this.load.audio('buttonSFX', '../assets/sfx/alarm_emergencymeeting.wav');
         this.load.audio('robotSFX', '../assets/sfx/Megaphone4.wav');
         this.load.audio('hitSFX', '../assets/sfx/impostor_kill.wav');
+        this.load.audio('victorySFX', '../assets/sfx/victory_crew.wav');
     }
 
     create ()
@@ -273,6 +274,9 @@ export default class Level_1 extends Phaser.Scene{
         // revisa cuando el jugador estpa en la zona de la puerta para finalizar el juego
         if ((this.player.x >= 2210 && this.player.y >= 490) && this.showFinishGate) {
             this.physics.pause();
+
+            this.sound.setVolume(0.15);
+            this.sound.play('victorySFX',{ loop: false });
             
             this.registry.set('score', this.score);
 
