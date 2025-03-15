@@ -33,7 +33,7 @@ export default class Level_2 extends Phaser.Scene{
         this.load.image('sky', '../assets/images/cafeteria_cleanup.png');
         this.load.image('heart', '../assets/images/vida.png');
         this.load.image('ground', '../assets/images/plataforma.png');
-        this.load.image('robot', '../assets/images/robot.png');
+        this.load.image('knife', '../assets/images/knife.png');
         this.load.image('pause', '../assets/images/pause.png');
         this.load.image('imposter-der', '../assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', '../assets/images/impostor-izquierda.png');
@@ -41,7 +41,7 @@ export default class Level_2 extends Phaser.Scene{
         this.load.spritesheet('player1', '../assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
         this.load.spritesheet('player2', '../assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
         this.load.audio('deathSFX', '../assets/sfx/KillSFX.wav');
-        this.load.audio('robotSFX', '../assets/sfx/Megaphone4.wav');
+        this.load.audio('knifeSFX', '../assets/sfx/KnifeStab4.wav');
         this.load.audio('hitSFX', '../assets/sfx/impostor_kill.wav');
     }
 
@@ -62,10 +62,9 @@ export default class Level_2 extends Phaser.Scene{
         this.platforms.create(50, 400, 'ground');
         this.platforms.create(-50, 250, 'ground');
 
-        this.invinciblePlatforms.create(400, 150, 'ground').setVisible(false);      //400, 500
-        this.invinciblePlatforms.create(-100, 80, 'ground').setVisible(false);         //0, 80
-        this.invinciblePlatforms.create(900, 80, 'ground').setVisible(false);       //800, 80
-        // this.bossEnemy = this.physics.add.sprite(400, 50, 'imposter-der').setScale(2);
+        this.invinciblePlatforms.create(400, 150, 'ground').setVisible(false);
+        this.invinciblePlatforms.create(-100, 80, 'ground').setVisible(false);
+        this.invinciblePlatforms.create(900, 80, 'ground').setVisible(false);
         this.bossEnemy = this.physics.add.sprite(400, 10, 'megaImpostor').setScale(0.3);
     
         this.player = this.physics.add.sprite(100, 450, 'player2');     //definiendo al personaje
@@ -220,7 +219,7 @@ export default class Level_2 extends Phaser.Scene{
 
     createCollectibles(){
         var rangeY = Phaser.Math.RND.pick([450, 300, 50]);          //se definen tres valores posibles para que aparezcan en el eje y
-        var collectible = this.stars.create(Phaser.Math.Between(0, 1000), rangeY, 'robot');
+        var collectible = this.stars.create(Phaser.Math.Between(0, 1000), rangeY, 'knife');
         collectible.setBounce(0.2);
         collectible.setCollideWorldBounds(true);
     }
@@ -230,7 +229,7 @@ export default class Level_2 extends Phaser.Scene{
 
         // repoduce el sonido de recoger objeto normal
         this.sound.setVolume(0.3);
-        this.sound.play('robotSFX',{ loop: false });
+        this.sound.play('knifeSFX',{ loop: false });
 
         //  Add and update the score
         this.score += 10;
@@ -299,8 +298,12 @@ export default class Level_2 extends Phaser.Scene{
         }else{
             this.createCollectibles();      //si el jefe sigue vivo, se crean coleccionables para derrotarlo
         }
-        if(this.currentHealth > 60){        //si se llega a 2/3 de vida, aparece un enemigo
+        if(this.currentHealth > 60){        //si el jefe tiene de 3/3 a 2/3 de vida, aparece un enemigo
             this.spawnEnemies(0);
+        }else if(this.currentHealth <= 60 && this.currentHealth > 30){      //si el jefe tiene de 2/3 a 1/3 de vida, aparecen dos enemigos
+            this.spawnEnemies(1);
+        }else if(this.currentHealth <= 30 && this.currentHealth > 0){      //si el jefe tiene de 1/3 a 0 de vida, aparecen tres enemigos
+            this.spawnEnemies(2);
         }
         this.updateHealthBar();             //se actualiza la barra de vida del jefe
     }
@@ -340,11 +343,11 @@ export default class Level_2 extends Phaser.Scene{
         }else if(this.currentHealth <= 60 && this.currentHealth > 30){
             this.healthBar.fillStyle(this.yellowColor, 1);
             this.healthBar.fillRect(this.healthBar_x, this.healthBar_y, healthWidth, 20);
-            this.spawnEnemies(1);
+            // this.spawnEnemies(1);
         }else if(this.currentHealth <= 30 && this.currentHealth > 0){
             this.healthBar.fillStyle(this.redColor, 1);
             this.healthBar.fillRect(this.healthBar_x, this.healthBar_y, healthWidth, 20);
-            this.spawnEnemies(2);
+            // this.spawnEnemies(2);
         }else if(this.currentHealth <= 0){      //cuando se quede sin vida se desactivan las fisicas para dar la ilusion de que cae del mundo
             this.bossEnemy.setImmovable(true);
             this.physics.world.colliders.remove(this.bossCollision);
