@@ -198,7 +198,6 @@ export default class Level_1 extends Phaser.Scene{
         {
             this.player.setVelocityY(-420);
         }
-
         
         this.bombs.children.iterate((bomb) => {
             if(bomb.body.velocity.x < 0){
