@@ -33,7 +33,7 @@ export default class Win extends Phaser.Scene{
 
         this.add.text(550, 310,"Player: " + playerName , {fontFamily: 'InYourFaceJoffrey', fontSize: "45px", fill: color, align: 'left' }).setOrigin(0.5);
 
-        this.add.text(550, 385,"Score: 444" , {fontFamily: 'InYourFaceJoffrey', fontSize: "45px", fill: color, align: 'left' }).setOrigin(0.5);
+        this.add.text(550, 385,"Score: " + this.registry.get('score') , {fontFamily: 'InYourFaceJoffrey', fontSize: "45px", fill: color, align: 'left' }).setOrigin(0.5);
         
         this.createButton();
     }

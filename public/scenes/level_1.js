@@ -275,7 +275,7 @@ export default class Level_1 extends Phaser.Scene{
         if ((this.player.x >= 2210 && this.player.y >= 490) && this.showFinishGate) {
             this.physics.pause();
 
-            this.sound.setVolume(0.15);
+            this.sound.setVolume(0.1);
             this.sound.play('victorySFX',{ loop: false });
             
             this.registry.set('score', this.score);
@@ -285,7 +285,8 @@ export default class Level_1 extends Phaser.Scene{
             var text = this.add.text(400, 100, "Nivel Completado", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5).setScrollFactor(0);
 
 
-            this.time.delayedCall(3000, () => {
+            this.time.delayedCall(8000, () => {
+                this.sound.stop('victorySound');
                 text.destroy();
                 rect.destroy();
                 this.scene.launch("Nivel2");
