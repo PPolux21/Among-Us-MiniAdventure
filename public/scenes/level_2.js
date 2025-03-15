@@ -37,6 +37,7 @@ export default class Level_2 extends Phaser.Scene{
         this.load.image('pause', '../assets/images/pause.png');
         this.load.image('imposter-der', '../assets/images/impostor-derecha.png');
         this.load.image('imposter-izq', '../assets/images/impostor-izquierda.png');
+        this.load.image('megaImpostor', '../assets/images/mega-impostor.png');
         this.load.spritesheet('player1', '../assets/images/player1.png', { frameWidth: 78, frameHeight: 80 });
         this.load.spritesheet('player2', '../assets/images/player2.png', { frameWidth: 78, frameHeight: 80 });
         this.load.audio('deathSFX', '../assets/sfx/KillSFX.wav');
@@ -61,11 +62,11 @@ export default class Level_2 extends Phaser.Scene{
         this.platforms.create(50, 400, 'ground');
         this.platforms.create(-50, 250, 'ground');
 
-        this.invinciblePlatforms.create(400, 150, 'ground').setVisible(false);
-        this.invinciblePlatforms.create(0, 100, 'ground').setVisible(false);
-        this.invinciblePlatforms.create(800, 100, 'ground').setVisible(false);
-
-        this.bossEnemy = this.physics.add.sprite(400, 50, 'imposter-der').setScale(2);
+        this.invinciblePlatforms.create(400, 150, 'ground').setVisible(false);      //400, 500
+        this.invinciblePlatforms.create(-100, 80, 'ground').setVisible(false);         //0, 80
+        this.invinciblePlatforms.create(900, 80, 'ground').setVisible(false);       //800, 80
+        // this.bossEnemy = this.physics.add.sprite(400, 50, 'imposter-der').setScale(2);
+        this.bossEnemy = this.physics.add.sprite(400, 10, 'megaImpostor').setScale(0.3);
     
         this.player = this.physics.add.sprite(100, 450, 'player2');     //definiendo al personaje
 
@@ -202,11 +203,11 @@ export default class Level_2 extends Phaser.Scene{
             this.player.setVelocityY(-420);
         }
         
-        if(this.bossEnemy.body.velocity.x < 0){
-            this.bossEnemy.setTexture('imposter-izq');
-        }else{
-            this.bossEnemy.setTexture('imposter-der');
-        }
+        // if(this.bossEnemy.body.velocity.x < 0){
+        //     this.bossEnemy.setTexture('imposter-izq');
+        // }else{
+        //     this.bossEnemy.setTexture('imposter-der');
+        // }
 
         this.bombs.children.iterate((bomb) => {     //se cambia la imagen del enemigo al voltear a la derecha o izquierda
             if(bomb.body.velocity.x < 0){

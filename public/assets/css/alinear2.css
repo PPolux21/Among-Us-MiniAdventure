@@ -258,86 +258,86 @@
 }
 
 /* Aqui esta la seccion de la tabla de records */
-    .tabla-records {
-        width: 800px;
-        height: 290px;
-        border-collapse: collapse;
-        margin-top: 20px;
-        background-color: transparent;
-        color: #fff;
-        font-family: 'fuenteAmongus';
-        text-align: center;
-        display: block;
-        position: absolute;
-        top: 300px;
-        left: 430px;
-        overflow-y: auto;
-    }
+.tabla-records {
+    width: 800px;
+    height: 290px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: transparent;
+    color: #fff;
+    font-family: 'fuenteAmongus';
+    text-align: center;
+    display: block;
+    position: absolute;
+    top: 300px;
+    left: 430px;
+    overflow-y: auto;
+}
 
-    .tabla-records th, .tabla-records td {
-        border: 2px solid #00ff00; 
-        padding: 10px;
-        font-size: 60px;
-    }
+.tabla-records th, .tabla-records td {
+    border: 2px solid #00ff00; 
+    padding: 10px;
+    font-size: 60px;
+}
 
-    .tabla-records th {
-        background-color: #444; 
-        text-shadow: 1px 1px 0 #000; 
-    }
+.tabla-records th {
+    background-color: #444; 
+    text-shadow: 1px 1px 0 #000; 
+}
 
-    .tabla-records tr:nth-child(even) {
-        background-color: #333; 
-    }
+.tabla-records tr:nth-child(even) {
+    background-color: #333; 
+}
 
-    .titulo-tabla {
-        display: block;
-        position: absolute;
-        top: 230px;
-        left: 600px;
-        font-size: 70px;
-        margin: 20px 0;
-        text-align: center;
-        color: #00ff00; 
-        text-shadow: 2px 2px 0 #000;
-        font-family: 'fuenteAmongus';
-    }
+.titulo-tabla {
+    display: block;
+    position: absolute;
+    top: 230px;
+    left: 600px;
+    font-size: 70px;
+    margin: 20px 0;
+    text-align: center;
+    color: #00ff00; 
+    text-shadow: 2px 2px 0 #000;
+    font-family: 'fuenteAmongus';
+}
 
-    /* pruebas con el audio y su estilo */
-    .audio-music{
-        display: block;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: transparent;
-        visibility:hidden ;
-    }
+/* pruebas con el audio y su estilo */
+.audio-music{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    visibility:hidden ;
+}
 
-    .audio-music controls{
-        background: transparent;
-    }
+.audio-music controls{
+    background: transparent;
+}
 
-    .reproducir-musica{
-        display: block;
-        position: absolute;
-        top: 20px;
-        right: 180px;
-        width: 150px;
-        height: 45px;
-        background-image: url(../assets-menu/fondo-2.jpg);
-        color: white;
-        font-family: 'fuenteAmongus';
-        font-size: 32px;
-    }
+.reproducir-musica{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 180px;
+    width: 150px;
+    height: 45px;
+    background-image: url(../assets-menu/fondo-2.jpg);
+    color: white;
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+}
 
-    .pausar-musica{
-        display: block;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 150px;
-        height: 45px;
-        background-image: url(../assets-menu/fondo-2.jpg);
-        color: white;
-        font-family: 'fuenteAmongus';
-        font-size: 32px;
-    }
+.pausar-musica{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 150px;
+    height: 45px;
+    background-image: url(../assets-menu/fondo-2.jpg);
+    color: white;
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+}
