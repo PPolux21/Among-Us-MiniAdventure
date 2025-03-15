@@ -25,7 +25,7 @@ export default class Level_1 extends Phaser.Scene{
 
     preload ()
     {
-        this.load.image('sky', '../assets/images/cafeteria_cleanup.png');
+        this.load.image('sky', '../assets/images/cafeteria3D.jpg');
         this.load.image('heart', '../assets/images/vida.png');
         this.load.image('ground', '../assets/images/plataforma.png');
         this.load.image('robot', '../assets/images/robot.png');
@@ -53,7 +53,7 @@ export default class Level_1 extends Phaser.Scene{
         
         // se construlle el nivel
         // se agrega la imagen de fondo
-        this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);
+        this.add.image(400, 300, 'sky').setScale(0.7).setScrollFactor(0);
 
         // se establecen las reglas de tamaño del nivel
         this.physics.world.setBounds(0, 0, 2250, 600);
@@ -168,7 +168,7 @@ export default class Level_1 extends Phaser.Scene{
         this.time.addEvent({
             delay: Phaser.Math.Between(8000, 15000), 
             callback: () => {
-                let x = Phaser.Math.Between(150, 1900);
+                let x = Phaser.Math.Between(1000, 1700);
                 this.createBonus(x,50);
                 this.spawnedObjects++;             
             },
@@ -276,7 +276,8 @@ export default class Level_1 extends Phaser.Scene{
             this.physics.pause();
 
             this.sound.setVolume(0.1);
-            this.sound.play('victorySFX',{ loop: false });
+            // this.victorySound = this.sound.add('victorySFX');
+            // this.victorySound.play();
             
             this.registry.set('score', this.score);
 
@@ -285,8 +286,7 @@ export default class Level_1 extends Phaser.Scene{
             var text = this.add.text(400, 100, "Nivel Completado", {fontFamily: 'InYourFaceJoffrey', fontSize: "32px", fill: "#fff", align: 'center' }).setOrigin(0.5).setScrollFactor(0);
 
 
-            this.time.delayedCall(8000, () => {
-                this.sound.stop('victorySound');
+            this.time.delayedCall(3000, () => {
                 text.destroy();
                 rect.destroy();
                 this.scene.launch("Nivel2");

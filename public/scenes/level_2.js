@@ -30,7 +30,7 @@ export default class Level_2 extends Phaser.Scene{
     redColor = "0xff0000";
 
     preload(){
-        this.load.image('sky', '../assets/images/cafeteria_cleanup.png');
+        this.load.image('lab', '../assets/images/laboratorio.jpg');
         this.load.image('heart', '../assets/images/vida.png');
         this.load.image('ground', '../assets/images/plataforma.png');
         this.load.image('knife', '../assets/images/knife.png');
@@ -52,7 +52,7 @@ export default class Level_2 extends Phaser.Scene{
 
         this.score = this.registry.get('score') || 0;
 
-        this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);       //fondo
+        this.add.image(400, 300, 'lab').setScale(0.8).setScrollFactor(0);       //fondo
 
         this.physics.world.setBounds(0, 0, 800, 600);
         this.cameras.main.setBounds(0, 0, 800, 600);
@@ -114,16 +114,16 @@ export default class Level_2 extends Phaser.Scene{
         this.bombs = this.physics.add.group();
 
         //se define la puntuacion
-        this.scoreText = this.add.text(670, 16, 'score:', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
+        this.scoreText = this.add.text(670, 16, 'score:', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#FFF' });
         this.scoreText.setText('Score: ' + this.score)
         this.scoreText.setScrollFactor(0);
         this.scoreText.setDepth(1);
 
-        var aliasText = this.add.text(20,10,jugadores[jugadores.length - 1].name,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+        var aliasText = this.add.text(20,10,jugadores[jugadores.length - 1].name,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#000' }).setDepth(1).setScrollFactor(0);
 
-        var dateText = this.add.text(520,10,jugadores[jugadores.length - 1].fecha,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+        var dateText = this.add.text(520,10,jugadores[jugadores.length - 1].fecha,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#000' }).setDepth(1).setScrollFactor(0);
         
-        var levelText = this.add.text(220,10,"Nivel 2",{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+        var levelText = this.add.text(220,10,"Nivel 2",{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#000' }).setDepth(1).setScrollFactor(0);
 
         //se definen las vidas
         for (let i=0; i<3; i++){
