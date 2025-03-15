@@ -5,7 +5,6 @@
     <title>Making your first Phaser 3 Game - Part 10</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.85.0/dist/phaser.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/estilos.css">
     <style type="text/css">
         body {
             margin: 0;
@@ -13,6 +12,15 @@
     </style>
 </head>
 <body>
+    <div class="contenedor"></div>
+
+    <audio id="musica-juego" class="audio-music" controls autoplay loop>
+		<source src="../assets/sonidos/Title Screen.wav" type="audio/wav">
+	</audio>
+
+	<button id="boton-reproducir" class="reproducir-musica">Reproducir</button>
+	<button id="boton-pausa" class="pausar-musica">Pausar</button>
+	<script src="../scripts/musica-control.js"></script>
     <script type="module" src="../mainGame.js" ></script>
 </body>
 </html>

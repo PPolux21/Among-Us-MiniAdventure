@@ -45,6 +45,11 @@ export default class Level_2 extends Phaser.Scene{
     }
 
     create(){
+        var jugadores = JSON.parse(localStorage.getItem("players"));
+        this.playerSprite = jugadores[jugadores.length - 1].player;
+
+        this.score = this.registry.get('score');
+
         this.add.image(400, 300, 'sky').setScale(1.4).setScrollFactor(0);       //fondo
 
         this.physics.world.setBounds(0, 0, 800, 600);
@@ -108,13 +113,20 @@ export default class Level_2 extends Phaser.Scene{
         this.bombs = this.physics.add.group();
 
         //se define la puntuacion
-        this.scoreText = this.add.text(670, 16, 'score: 0', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
+        this.scoreText = this.add.text(670, 16, 'score:', { fontFamily: 'InYourFaceJoffrey', fontSize: '40px', fill: '#000' });
+        this.scoreText.setText('Score: ' + this.score)
         this.scoreText.setScrollFactor(0);
         this.scoreText.setDepth(1);
 
+        var aliasText = this.add.text(20,10,jugadores[jugadores.length - 1].name,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+
+        var dateText = this.add.text(520,10,jugadores[jugadores.length - 1].fecha,{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+        
+        var levelText = this.add.text(220,10,"Nivel 2",{ fontFamily: 'InYourFaceJoffrey', fontSize: '25px', fill: '#FFF' }).setDepth(1).setScrollFactor(0);
+
         //se definen las vidas
         for (let i=0; i<3; i++){
-            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 40, 'heart').setScale(1.5);
+            this.lives[i] = this.add.image(40 * (i + 1) + (i * 10), 60, 'heart').setScale(1.5);
             this.lives[i].setScrollFactor(0);
             this.lives[i].setDepth(1);
         };
@@ -178,6 +190,7 @@ export default class Level_2 extends Phaser.Scene{
         //      y pausa la escena actual del nivel
         if (this.gameOver) {
             this.scene.launch('Gameover');
+            this.postRecord();
             this.scene.pause();
             return;
         }
@@ -352,6 +365,16 @@ export default class Level_2 extends Phaser.Scene{
 
     victory(){
         console.log("Ganaste el juego");
+        this.postRecord();
     }
 
+    postRecord(){
+        var jugadores = JSON.parse(localStorage.getItem("players"));
+
+        if (jugadores[jugadores.length - 1].score < this.score) {
+            jugadores[jugadores.length - 1].score = this.score;
+        }
+
+        localStorage.setItem("players", JSON.stringify(jugadores));
+    }
 }
