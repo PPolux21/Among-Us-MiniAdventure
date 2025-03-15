@@ -148,7 +148,7 @@ export default class Level_2 extends Phaser.Scene{
 
         this.pause.on('pointerdown', () => {
             if (!this.isPaused) {
-                this.registry.set('levelPause', "Nivel1");
+                this.registry.set('levelPause', "Nivel2");
                 this.scene.launch("Pause");
                 this.scene.pause();
                 this.isPaused = false;
