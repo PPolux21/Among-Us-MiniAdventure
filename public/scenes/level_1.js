@@ -505,7 +505,7 @@ export default class Level_1 extends Phaser.Scene{
     postRecord(){
         var jugadores = JSON.parse(localStorage.getItem("players"));
 
-        if (jugadores[jugadores.length - 1].score > this.score) {
+        if (jugadores[jugadores.length - 1].score < this.score) {
             jugadores[jugadores.length - 1].score = this.score;
         }
 
