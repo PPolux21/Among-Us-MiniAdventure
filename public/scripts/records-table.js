@@ -20,6 +20,9 @@ function cargarRecords(){
             tbody.appendChild(fila);
         });
     }
+
+    var audio = document.getElementById('musica-juego');
+    audio.volume = 0.5; // Volumen al 70%
 }
 
 window.onload = cargarRecords;

@@ -7,15 +7,12 @@
 .contenedor{
      width:cover;
      min-height: 650px;
-     border: 10px solid #000;
+     /* border: 10px solid #000; */
      margin:auto;
      font-size: 50px;
      line-height: 50px;
      text-align: center;    
-     background-image: url(../assets-menu/fondo.gif);
-     background-size: auto; 
-     background-repeat: repeat; 
-     background-position: center; 
+     /* background-image: url(../assets-menu/fondo.gif); */ 
 }
 
 .contenedor > div{
@@ -27,7 +24,12 @@
 }
 
 body{
-    background-image: url(../assets-menu/fondo-2.jpg);
+    /* background-image: url(../assets-menu/fondo-2.jpg); */
+    margin: 0;
+    background-image: url(../assets-menu/fondo.gif);
+    background-size: auto; 
+    background-repeat: repeat; 
+    background-position: center;
 }
 
 

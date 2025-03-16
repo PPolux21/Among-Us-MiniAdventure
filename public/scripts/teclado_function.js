@@ -14,7 +14,12 @@ letras.forEach(letra => {
                 inputNombre.setAttribute('placeholder',"Nombre muy corto");
             } else {
                 const selectedPlayer = localStorage.getItem('selectedPlayer');
-                const fecha = new Date().toISOString().split('T')[0];
+                // const fecha = new Date().toISOString().split('T')[0];
+                const hoy = new Date();
+                const anioActual = hoy.getFullYear();
+                const mesActual = String(hoy.getMonth() + 1).padStart(2, '0');
+                const diaActual = String(hoy.getDate()).padStart(2, '0');
+                const fechaActual = `${diaActual}-${mesActual}-${anioActual}`;
 
                 let playersArray = JSON.parse(localStorage.getItem('players')) || [];
 
@@ -30,7 +35,7 @@ letras.forEach(letra => {
                     name: inputNombre.value,
                     player: selectedPlayer,
                     score: score,
-                    fecha: fecha
+                    fecha: fechaActual
                 };
 
                 playersArray.push(newPlayerInfo);
