@@ -22,7 +22,7 @@ function cargarRecords(){
     }
 
     var audio = document.getElementById('musica-juego');
-    audio.volume = 0.5; // Volumen al 70%
+    audio.volume = 0.3; // Volumen al 70%
 }
 
 window.onload = cargarRecords;

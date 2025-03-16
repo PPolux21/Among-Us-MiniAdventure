@@ -1,3 +1,8 @@
+:root{
+    --blanco : #fff;
+    --negro : #000;
+}
+
 @font-face {
     font-family: 'fuenteAmongus';
     src: url(../fonts/InYourFaceJoffrey!.ttf);
@@ -139,7 +144,7 @@
 .name-1{
     display: block;
     position: absolute;
-    color: white;
+    color: var(--blanco);
     font-size: 48px;
     font-family: 'fuenteAmongus';
     top: 390px;
@@ -150,7 +155,7 @@
 .name-2{
     display: block;
     position: absolute;
-    color: white;
+    color: var(--blanco);
     font-size: 48px;
     font-family: 'fuenteAmongus';
     top: 260px;
@@ -161,7 +166,7 @@
 .name-3{
     display: block;
     position: absolute;
-    color: white;
+    color: var(--blanco);
     font-size: 48px;
     font-family: 'fuenteAmongus';
     top: 490px;
@@ -233,8 +238,8 @@
 .teclado .letra{
     font-family: 'fuenteAmongus';
     font-size: 32px;
-    background-color: black;
-    color: white;
+    background-color: var(--negro);
+    color: var(--blanco);
     border: 10px white solid;
     cursor: pointer;
 
@@ -251,8 +256,8 @@
 
     text-align: center;
     justify-content: center;
-    background-color: black;
-    color: white;
+    background-color: var(--negro);
+    color: var(--blanco);
     font-family: 'fuenteAmongus';
     font-size: 32px;
 }
@@ -263,8 +268,8 @@
     height: 290px;
     border-collapse: collapse;
     margin-top: 20px;
-    background-color: black;
-    color: #fff;
+    background-color: var(--negro);
+    color: var(--blanco);
     font-family: 'fuenteAmongus';
     text-align: center;
     display: block;
@@ -282,7 +287,7 @@
 
 .tabla-records th {
     background-color: #444; 
-    text-shadow: 1px 1px 0 #000; 
+    text-shadow: 1px 1px 0 var(--negro); 
 }
 
 .tabla-records tr:nth-child(even) {
@@ -298,7 +303,7 @@
     margin: 20px 0;
     text-align: center;
     color:#fff; 
-    text-shadow: 2px 2px 0 #000;
+    text-shadow: 2px 2px 0 var(--negro);
     font-family: 'fuenteAmongus';
 }
 
@@ -333,7 +338,7 @@
     width: 150px;
     height: 45px;
     background-image: url(../assets-menu/fondo-2.jpg);
-    color: white;
+    color: var(--blanco);
     font-family: 'fuenteAmongus';
     font-size: 32px;
 }
@@ -346,7 +351,7 @@
     width: 150px;
     height: 45px;
     background-image: url(../assets-menu/fondo-2.jpg);
-    color: white;
+    color: var(--blanco);
     font-family: 'fuenteAmongus';
     font-size: 32px;
 }
