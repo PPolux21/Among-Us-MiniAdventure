@@ -1,0 +1,16 @@
+@font-face {
+    font-family: "InYourFaceJoffrey";
+    src: url("../fonts/InYourFaceJoffrey!.ttf") format("truetype");
+}
+
+html{
+    font-family: "InYourFaceJoffrey";
+}
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
