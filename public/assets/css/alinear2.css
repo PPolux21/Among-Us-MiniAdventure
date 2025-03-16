@@ -1,0 +1,357 @@
+:root{
+    --blanco : #fff;
+    --negro : #000;
+}
+
+@font-face {
+    font-family: 'fuenteAmongus';
+    src: url(../fonts/InYourFaceJoffrey!.ttf);
+}
+
+.contenedor {
+    display: grid;
+    grid-gap: 40px;
+    grid-template-columns: repeat(2, 260px);
+    grid-template-rows: repeat(2, 100px);
+
+    /*Alinear horizontalmente*/
+    /* justify-content: start; */
+    /* justify-content: center; */
+    /* justify-content: end; */
+    /* justify-content: space-around; */
+    /* justify-content: space-between; */
+    /* justify-content: space-evenly; */
+    justify-content: center;
+
+    /* Alinear verticalmente */
+    /* align-content: normal; */
+    /* align-content: start; */
+    /* align-content: center; */
+    /* align-content: end; */
+    /* align-content: space-around; */
+    /* align-content: space-between; */
+    align-content: flex-end;
+    padding-bottom: 50px;
+    position: relative; /* Para posicionar elementos absolutos dentro */
+}
+
+/* Estilos de los botones principales */
+.contenedor .boton-play,
+.contenedor .boton-instructions,
+.contenedor .boton-records,
+.contenedor .boton-credits {
+    background-size: cover;
+    background-position: center;
+}
+
+.contenedor .boton-play {
+    background-image: url(../assets-menu/boton-play-1.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.contenedor .boton-instructions {
+    background-image: url(../assets-menu/boton-instructions-1.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.contenedor .boton-records {
+    background-image: url(../assets-menu/boton-Records-1.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.contenedor .boton-credits {
+    background-image: url(../assets-menu/boton-credits-1.png);
+    background-size: cover;
+    background-position: center;
+}
+
+/* Primera imagen: Logo Among Us */
+.imagen-1 {
+    width: 350px;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Segunda imagen: Logo Mini Adventure */
+.imagen-2 {
+    display: block;
+    position: absolute;
+    top: 95px;
+    left: calc(50% - 150px);
+    margin: 0;
+    padding: 0;
+}
+
+
+.contenedor .boton-esquina {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px; 
+    height: 50px; 
+    background-image: url(../assets-menu/BackButton.png);
+    background-size: cover;
+    background-position: center;
+}
+
+#record-canvas{
+    z-index: 10;
+    margin-top: 150px;
+}
+
+/* Esta es la seccion de los iconos de nosotros en los creditos */
+.icon-1{
+    display: block;
+    position: absolute;
+    top: 350px;
+    left: 900px;
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    transition: 0.5s ease; 
+
+}
+
+.icon-2{
+    display: block;
+    position: absolute;
+    top: 220px;
+    left: 150px;
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    transition: 0.5s ease; 
+
+}
+
+.icon-3{
+    display: block;
+    position: absolute;
+    left: 150px;
+    top:460px;
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    transition: 0.5s ease; 
+
+}
+
+.name-1{
+    display: block;
+    position: absolute;
+    color: var(--blanco);
+    font-size: 48px;
+    font-family: 'fuenteAmongus';
+    top: 390px;
+    left: 1130px;
+
+}
+
+.name-2{
+    display: block;
+    position: absolute;
+    color: var(--blanco);
+    font-size: 48px;
+    font-family: 'fuenteAmongus';
+    top: 260px;
+    left: 380px;
+
+}
+
+.name-3{
+    display: block;
+    position: absolute;
+    color: var(--blanco);
+    font-size: 48px;
+    font-family: 'fuenteAmongus';
+    top: 490px;
+    left: 380px;
+
+}
+
+.icon-1:hover{
+   content: url(../assets-menu/brandon-2.jpg);
+}
+
+.icon-2:hover{
+    content: url(../assets-menu/alberto-2.jpg);
+}
+
+.icon-3:hover{
+    content: url(../assets-menu/joseLuis-2.jpg);
+}
+
+/* Seccion de la pantalla de seleccion de personaje */
+.select-image{
+    display: block;
+    position: absolute;
+    top: 250px;
+    left: 430px;
+    width: 650px;
+    height: 67px;
+}
+
+.player-1{
+    display: block;
+    position: absolute;
+    top: 370px;
+    left: 400px;
+    width: 300px;
+    height: 300px;
+}
+
+.player-2{
+    display: block;
+    position: absolute;
+    top: 370px;
+    left: 800px;
+    width: 300px;
+    height: 300px;
+}
+
+/* seccion del nombre y sus clases */
+.contenedor .teclado{
+    display: grid;
+    grid-gap: -5px;
+    grid-template-columns:repeat(9, 70px);
+    grid-template-rows: repeat(5, 100px);
+
+    width: 900px;
+    height: 270px;
+
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 150px;
+
+    position: absolute;
+    top: 290px;
+    left: 300px;
+
+    background-color: transparent;
+}
+
+.teclado .letra{
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+    background-color: var(--negro);
+    color: var(--blanco);
+    border: 10px white solid;
+    cursor: pointer;
+
+}
+
+.contenedor .space_name{
+    display: block;
+    position: absolute;
+    width: 600px;
+    height: 40px;
+
+    top: 240px;
+    left: 450px;
+
+    text-align: center;
+    justify-content: center;
+    background-color: var(--negro);
+    color: var(--blanco);
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+}
+
+/* Aqui esta la seccion de la tabla de records */
+.tabla-records {
+    width: 800px;
+    height: 290px;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--negro);
+    color: var(--blanco);
+    font-family: 'fuenteAmongus';
+    text-align: center;
+    display: block;
+    position: absolute;
+    top: 300px;
+    left: 620px;
+    overflow-y: auto;
+}
+
+.tabla-records th, .tabla-records td {
+    border: 2px solid gray; 
+    padding: 10px;
+    font-size: 60px;
+}
+
+.tabla-records th {
+    background-color: #444; 
+    text-shadow: 1px 1px 0 var(--negro); 
+}
+
+.tabla-records tr:nth-child(even) {
+    background-color: #333; 
+}
+
+.titulo-tabla {
+    display: block;
+    position: absolute;
+    top: 230px;
+    left: 770px;
+    font-size: 70px;
+    margin: 20px 0;
+    text-align: center;
+    color:#fff; 
+    text-shadow: 2px 2px 0 var(--negro);
+    font-family: 'fuenteAmongus';
+}
+
+.imagen-3{
+    display: block;
+    position: absolute;
+    width: 600px;
+    height: 350px;
+    top: 190px;
+    left: 10px;
+}
+
+/* pruebas con el audio y su estilo */
+.audio-music{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    visibility:hidden ;
+}
+
+.audio-music controls{
+    background: transparent;
+}
+
+.reproducir-musica{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 180px;
+    width: 150px;
+    height: 45px;
+    background-image: url(../assets-menu/fondo-2.jpg);
+    color: var(--blanco);
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+}
+
+.pausar-musica{
+    display: block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 150px;
+    height: 45px;
+    background-image: url(../assets-menu/fondo-2.jpg);
+    color: var(--blanco);
+    font-family: 'fuenteAmongus';
+    font-size: 32px;
+}

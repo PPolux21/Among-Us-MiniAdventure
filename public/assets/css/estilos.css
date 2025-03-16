@@ -1,0 +1,42 @@
+.header p{
+    font-size: 50px;
+    text-align: center;
+    color: white;
+}
+
+.contenedor{
+     width:cover;
+     min-height: 650px;
+     /* border: 10px solid #000; */
+     margin:auto;
+     font-size: 50px;
+     line-height: 50px;
+     text-align: center;    
+     /* background-image: url(../assets-menu/fondo.gif); */ 
+}
+
+.contenedor > div{
+    display:flex;
+    padding: 20px;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    background: #2f89fc;
+    box-shadow: 2px 2px 10px rgba(0,0,0,.25);
+}
+
+body{
+    /* background-image: url(../assets-menu/fondo-2.jpg); */
+    margin: 0;
+    background-image: url(../assets-menu/fondo.gif);
+    background-size: auto; 
+    background-repeat: repeat; 
+    background-position: center;
+}
+
+
+#record-canvas{
+    z-index: 10;
+    margin-top: 70px;
+}
+
