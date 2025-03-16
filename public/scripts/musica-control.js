@@ -1,3 +1,9 @@
+// Configurar el volumen global cuando cargue la página
+window.onload = function() {
+    var audio = document.getElementById('musica-juego');
+    audio.volume = 0.1; // Volumen al 70%
+};
+
 document.getElementById('boton-reproducir').addEventListener('click', function() {
     var audio = document.getElementById('musica-juego');
     audio.play();
